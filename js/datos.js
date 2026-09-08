@@ -1,9 +1,8 @@
-
 const JUEGOS = [
   { id: "g1", nombre: "League of legends", integrantesPorEquipo: 5, modalidad: "Equipos" },
   { id: "g2", nombre: "Rocket League",      integrantesPorEquipo: 3, modalidad: "Equipos" },
   { id: "g3", nombre: "Mario Kart 8 deluxe",   integrantesPorEquipo: 1, modalidad: "Individual" },
-  { id: "g4", nombre: "Dota 2",     integrantesPorEquipo: 5, modalidad: "Equipos" },
+  { id: "g4", nombre: "Valorant",     integrantesPorEquipo: 5, modalidad: "Equipos" },
 ];
 
 const EQUIPOS = [
