@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estyle.css">
+    <title>Inscripción a torneo | eSports Arena Manager</title>
+</head>
+<body>
+
+    <header>
+        <nav>
+
+        </nav>
+    </header>
+
+    <main>
+        <section id="resumen-torneo">
+            <h1>Inscripción a torneo</h1>
+            <div id="detalle-torneo"></div>
+            <ul id="lista-requisitos"></ul>
+        </section>
+
+        <section id="formulario-inscripcion">
+            <form id="form-inscripcion" autocomplete="on">
+                <fieldset>
+                    <legend>Tipo de participante</legend>
+
+                    <label for="tipo-participante">¿Cómo se inscribirá?</label>
+                    <select name="tipoParticipante" id="tipo-participante" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="jugador">Jugador</option>
+                        <option value="equipo">Equipo</option>
+                    </select>
+                    <span class="mensaje-error" id="error-tipo"></span>
+
+                    <div id="contenedor-selector-equipo" hidden>
+                        <label for="selector-equipo">Selecciona tu equipo</label>
+                        <select name="equipoId" id="selector-equipo"></select>
+                        <span class="mensaje-error" id="error-equipo"></span>
+                    </div>
+                </fieldset>
+
+                <p id="mensaje-bloqueo" class="mensaje-error" hidden></p>
+                <button type="submit" id="btn-confirmar">Confirmar inscripción</button>
+            </form>
+
+            <div id="confirmacion" hidden>
+                <h2>¡Inscripción confirmada!</h2>
+                <p id="detalle-confirmacion"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>eSports Arena Manager — footer informativo</p>
+    </footer>
+
+    <script src="js/datos.js"></script>
+    <script src="js/inscripcion.js"></script>
+</body>
+</html>

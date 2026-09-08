@@ -13,39 +13,46 @@
             <ul>
                 <li><a href="inicio.html">Inicio</a></li>
                 <li><a href="torneos.html">Torneos</a></li>
+                <li><a href="inscripcion.html">Inscripción</a></li>
+                <li><a href="gestion.html">Mi equipo</a></li>
+                <li><a href="perfil.html">Perfil</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <section class="hero">
-            <h1>Bienvenido a eSports Arena Manager</h1>
-            <p>La plataforma líder para competir y gestionar torneos de videojuegos.</p>
-        </section>
+    <main id="contenido-principal">
+        <section class="franja">
+            <div class="contenedor">
+                <section class="hero">
+                    <h1>Bienvenido a eSports Arena Manager</h1>
+                    <p>La plataforma líder para competir y gestionar torneos de videojuegos.</p>
+                </section>
 
-        <section class="video">
-            <h2>Gran Final Destacada</h2>
-            <div>
-                <iframe 
-                    width="560" 
-                    height="315" 
-                    src="https://www.youtube.com/embed/fmI_Ndrxy14" 
-                    title="Lol cinematica" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
-                </iframe>
+                <section class="video">
+                    <h2>Gran Final Destacada</h2>
+                    <div>
+                        <iframe 
+                            width="560" 
+                            height="315" 
+                            src="https://www.youtube.com/embed/fmI_Ndrxy14" 
+                            title="Lol cinematica" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </section>
+
+                <section class="destacados caja-torneos">
+                    <h2>Torneos Destacados</h2>
+                    <div id="destacados" class="grilla"></div>
+                </section>
+
+                <section class="cierres caja-torneos">
+                    <h2>Próximos Cierres de Inscripción</h2>
+                    <div id="cierres" class="grilla"></div>
+                </section>
             </div>
-        </section>
-
-        <section class="destacados">
-            <h2>Torneos Destacados</h2>
-            <div id="destacados" class="grilla"></div>
-        </section>
-
-        <section class="cierres">
-            <h2>Próximos Cierres de Inscripción</h2>
-            <div id="cierres" class="grilla"></div>
         </section>
     </main>
 
@@ -53,7 +60,7 @@
         <p>&copy; 2026 eSports Arena Manager. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="datos.js"></script>
-    <script src="inicio.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/inicio.js"></script>
 </body>
 </html>

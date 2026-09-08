@@ -1,0 +1,232 @@
+:root {
+  --color-fondo: #0E0B16;
+  --color-superficie: #1C1430;
+  --color-primario: #9146FF;
+  --color-acento: #00F5D4;
+  --color-texto: #F1ECFF;
+  --color-error: #FF5C7A;
+  --radio-borde: 8px;
+  --espaciado: 1rem;
+}
+
+/* ===== Reset básico ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.5;
+}
+
+h1, h2, h3, legend {
+  font-weight: 700;
+  color: var(--color-texto);
+}
+
+/* ===== Header y navegación ===== */
+header {
+  background: var(--color-superficie);
+  padding: var(--espaciado);
+  border-bottom: 2px solid var(--color-primario);
+}
+
+header nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+header nav a {
+  color: var(--color-texto);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+header nav a:hover,
+header nav a:focus {
+  color: var(--color-acento);
+  text-decoration: underline;
+}
+
+/* ===== Layout principal ===== */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+section {
+  background: var(--color-superficie);
+  border-radius: var(--radio-borde);
+  padding: 1.5rem;
+}
+
+/* ===== Resumen del torneo ===== */
+#detalle-torneo p {
+  margin: 0.25rem 0;
+}
+
+#lista-requisitos {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+}
+
+#lista-requisitos li {
+  margin-bottom: 0.35rem;
+}
+
+/* ===== Formularios (compartido por ambas vistas) ===== */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+fieldset {
+  border: 1px solid var(--color-primario);
+  border-radius: var(--radio-borde);
+  padding: 1rem;
+}
+
+legend {
+  padding: 0 0.5rem;
+  color: var(--color-acento);
+}
+
+label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="email"],
+select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: var(--radio-borde);
+  border: 1px solid var(--color-primario);
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+/* ===== Botones ===== */
+button {
+  align-self: flex-start;
+  background: var(--color-primario);
+  color: #FFFFFF; /* blanco, cumple contraste 4.6:1 según el caso */
+  border: none;
+  border-radius: var(--radio-borde);
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+button:hover,
+button:focus {
+  opacity: 0.85;
+}
+
+button[type="button"] {
+  background: var(--color-acento);
+  color: #0E0B16; /* texto oscuro sobre el acento, mejor contraste */
+}
+
+/* Botón "Quitar" dentro de la lista de integrantes */
+.btn-quitar {
+  align-self: auto;
+  margin-left: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  background: var(--color-error);
+  color: #FFFFFF;
+}
+
+/* ===== Mensajes de error ===== */
+.mensaje-error {
+  display: block;
+  color: var(--color-error);
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+}
+
+.mensaje-error:empty {
+  display: none;
+}
+
+/* El atributo hidden siempre gana */
+[hidden] {
+  display: none !important;
+}
+
+/* ===== Confirmación de inscripción ===== */
+#confirmacion {
+  border: 2px solid var(--color-acento);
+  border-radius: var(--radio-borde);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* ===== Lista de integrantes del equipo ===== */
+#lista-integrantes {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#lista-integrantes li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-fondo);
+  border-radius: var(--radio-borde);
+  padding: 0.6rem 1rem;
+}
+
+/* ===== Footer ===== */
+footer {
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  text-align: center;
+  padding: 1.25rem;
+  margin-top: 2rem;
+}
+
+/* ===== Responsivo simple ===== */
+@media (max-width: 600px) {
+  main {
+    padding: 1rem;
+  }
+
+  header nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  #lista-integrantes li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

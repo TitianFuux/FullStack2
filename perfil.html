@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eSports Arena Manager — Perfil de jugador</title>
+<link rel="stylesheet" href="css/perfil.css">
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="contenedor">
+    <a class="marca" href="inicio.html">Arena<span>Manager</span></a>
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <ul>
+        <li><a href="inicio.html">Inicio</a></li>
+        <li><a href="torneos.html">Torneos</a></li>
+        <li><a href="inscripcion.html">Inscripción</a></li>
+        <li><a href="equipo.html">Mi equipo</a></li>
+        <li><a href="perfil.html" aria-current="page">Perfil</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido-principal">
+  <section class="franja">
+    <div class="contenedor">
+      <h1>Perfil de jugador</h1>
+
+      <div class="campo" style="max-width:320px; margin-bottom:1.5rem;">
+        <label for="selector-jugador">Ver ficha de</label>
+        <select id="selector-jugador"></select>
+      </div>
+
+      <div class="dos-columnas">
+        <div>
+          <div id="ficha-jugador"></div>
+
+          <h2 style="margin-top:2rem;">Historial de torneos</h2>
+          <div class="tabla-envoltorio">
+            <table>
+              <thead><tr><th scope="col">Torneo</th><th scope="col">Resultado</th></tr></thead>
+              <tbody id="cuerpo-historial"></tbody>
+            </table>
+          </div>
+
+          <h2 style="margin-top:2rem;">Sanciones</h2>
+          <ul class="lista-integrantes" id="lista-sanciones"></ul>
+        </div>
+
+        <div>
+          <h2>Editar datos de contacto</h2>
+          <p>Actualiza tu apodo, correo y contraseña de acceso.</p>
+          <form id="form-perfil" class="formulario" novalidate>
+            <div class="campo" id="grupo-apodo">
+              <label for="campo-apodo">Apodo</label>
+              <input type="text" id="campo-apodo" name="apodo" autocomplete="username" placeholder="Colocar apodo de jugador.">
+              <span class="mensaje-error" role="alert"></span>
+            </div>
+            <div class="campo" id="grupo-correo">
+              <label for="campo-correo">Correo electrónico</label>
+              <input type="email" id="campo-correo" name="correo" autocomplete="email" placeholder="nombre@correo.cl">
+              <span class="mensaje-error" role="alert"></span>
+            </div>
+            <div class="campo" id="grupo-edad">
+              <label for="campo-edad">Edad</label>
+              <input type="number" id="campo-edad" name="edad" autocomplete="off" min="18" max="99" placeholder="18 a 99 años">
+              <span class="ayuda">Edad mínima: 18 años.</span>
+              <span class="mensaje-error" role="alert"></span>
+            </div>
+            <div class="campo" id="grupo-clave">
+              <label for="campo-clave">Nueva contraseña</label>
+              <input type="password" id="campo-clave" name="clave" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+              <span class="mensaje-error" role="alert"></span>
+            </div>
+            <div class="campo" id="grupo-clave-confirmar">
+              <label for="campo-clave-confirmar">Confirmar contraseña</label>
+              <input type="password" id="campo-clave-confirmar" name="claveConfirmar" autocomplete="new-password">
+              <span class="mensaje-error" role="alert"></span>
+            </div>
+
+            <div id="confirmacion-perfil" class="aviso aviso--exito oculto" role="status"></div>
+            <button type="submit" class="boton boton-primario">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="contenedor">
+    <p>© 2026 eSports Arena Manager.</p>
+    <nav aria-label="Enlaces del pie de página">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="torneos.html">Torneos</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<script src="js/datos.js"></script>
+<script src="js/perfil.js"></script>
+</body>
+</html>
