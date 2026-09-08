@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eSports Arena Manager - Torneos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h2>eSports Arena</h2>
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="torneos.html">Torneos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="filtros">
+            <h1>Catálogo de Torneos</h1>
+
+            <form id="formulario">
+                <div class="grupo">
+                    <label for="busqueda">Buscar por nombre:</label>
+                    <input type="text" id="busqueda" placeholder="Ej: Torneo Valorant">
+                </div>
+
+                <div class="grupo">
+                    <label for="juego">Juego:</label>
+                    <select id="juego">
+                        <option value="todos">Todos los juegos</option>
+                        <option value="1">League of Legends</option>
+                        <option value="2">Valorant</option>
+                        <option value="3">Counter-Strike 2</option>
+                        <option value="4">Rocket League</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label for="estado">Estado:</label>
+                    <select id="estado">
+                        <option value="todos">Todos los estados</option>
+                        <option value="ABIERTO">Abierto</option>
+                        <option value="EN_CURSO">En curso</option>
+                        <option value="FINALIZADO">Finalizado</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label for="desde">Desde:</label>
+                    <input type="date" id="desde">
+                </div>
+
+                <div class="campo">
+                    <label for="hasta">Hasta:</label>
+                    <input type="date" id="hasta">
+                </div>
+            </form>
+
+            <div id="error" class="alerta" style="display: none;"></div>
+        </section>
+
+        <section class="resultados">
+            <div id="catalogo" class="grilla"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 eSports Arena Manager. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="datos.js"></script>
+    <script src="listado.js"></script>
+</body>
+</html>
