@@ -3,63 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="estilos.css">
-    <title>Gestión de equipo | eSports Arena Manager</title>
+    <link rel="stylesheet" href="gestion.css">
+    <title>Gestión de Equipo | eSports Arena Manager</title>
 </head>
 <body>
 
     <header>
         <nav>
-            <li><a href="inicio.html">Inicio</a></li>
-            <li><a href="torneos.html">Torneos</a></li>
-            <li><a href="inscripcion.html">Inscripción</a></li>
-            <li><a href="perfi.html">Perfil de jugador</a></li>
-
+            <h2>eSports Arena</h2>
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="torneos.html">Torneos</a></li>
+                <li><a href="inscripcion.html">Inscripción</a></li>
+                <li><a href="perfil.html">Perfil de jugador</a></li>
+                <li><a href="gestion.html" class="activo">Mi Equipo</a></li>
+            </ul>
         </nav>
     </header>
 
     <main>
         <section id="crear-equipo">
-            <h1>Crear equipo</h1>
-            <form id="form-equipo" autocomplete="on">
+            <h1>Gestión de Mi Equipo</h1>
 
-                <label for="nombre-equipo">Nombre del equipo</label>
-                <input type="text" id="nombre-equipo" name="nombreEquipo" required minlength="3"
-                    autocomplete="off" aria-describedby="ayuda-nombre">
-                <small id="ayuda-nombre">Mínimo 3 caracteres, no puede repetirse un nombre ya usado.</small>
-                <span class="mensaje-error" id="error-nombre"></span>
+            <article class="tarjeta-gestion">
+                <h2>Crear un Nuevo Equipo</h2>
+                <form id="form-equipo" autocomplete="on">
 
-                <label for="juego-principal">Juego principal</label>
-                <select id="juego-principal" name="juegoPrincipal" required aria-describedby="ayuda-juego">
-                    <option value="">Selecciona un juego</option>
-                </select>
-                <small id="ayuda-juego">Define qué jugadores puedes elegir como integrantes.</small>
-                <span class="mensaje-error" id="error-juego"></span>
+                    <div class="grupo-campo">
+                        <label for="nombre-equipo">Nombre del equipo</label>
+                        <input type="text" id="nombre-equipo" name="nombreEquipo" required minlength="3"
+                            autocomplete="off" aria-describedby="ayuda-nombre">
+                        <small id="ayuda-nombre">Mínimo 3 caracteres, no se permite repetir nombres ya usados.</small>
+                        <span class="mensaje-error" id="error-nombre"></span>
+                    </div>
 
-                <label for="capitan">Capitán</label>
-                <select id="capitan" name="capitan" required aria-describedby="ayuda-capitan">
-                    <option value="">Selecciona un capitán</option>
-                </select>
-                <small id="ayuda-capitan">El capitán queda como integrante fijo y no se puede quitar.</small>
-                <span class="mensaje-error" id="error-capitan"></span>
-                <button type="submit">Crear equipo</button>
-            </form>
+                    <div class="grupo-campo">
+                        <label for="juego-principal">Juego principal</label>
+                        <select id="juego-principal" name="juegoPrincipal" required aria-describedby="ayuda-juego">
+                            <option value="">Selecciona un juego</option>
+                        </select>
+                        <small id="ayuda-juego">Define qué jugadores puedes elegir como integrantes.</small>
+                        <span class="mensaje-error" id="error-juego"></span>
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label for="capitan">Capitán</label>
+                        <select id="capitan" name="capitan" required aria-describedby="ayuda-capitan">
+                            <option value="">Selecciona un capitán</option>
+                        </select>
+                        <small id="ayuda-capitan">El capitán queda como integrante fijo y no se puede quitar.</small>
+                        <span class="mensaje-error" id="error-capitan"></span>
+                    </div>
+
+                    <button type="submit" id="btn-crear">Crear Equipo</button>
+                </form>
+            </article>
+
+            <article class="contenedor-video">
+                <h2>Guía en Video: Armado de Nóminas y Estrategia</h2>
+                <div class="marco-video">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Guía de Gestión de Equipos" allowfullscreen></iframe>
+                </div>
+            </article>
         </section>
 
-        <section id="integrantes-equipo">
-            <h2>Integrantes del equipo</h2>
+        <section id="integrantes-equipo" hidden>
+            <article class="tarjeta-gestion">
+                <div class="cabecera-equipo">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=120&q=80" alt="Emblema del Equipo" class="avatar-equipo">
+                    <h2>Plantilla de Integrantes</h2>
+                </div>
 
-            <ul id="lista-integrantes"></ul>
+                <ul id="lista-integrantes"></ul>
 
-            <label for="agregar-jugador">Agregar jugador</label>
-            <select id="agregar-jugador"></select>
-            <button type="button" id="btn-agregar">Agregar</button>
-            <span class="mensaje-error" id="error-agregar"></span>
+                <div class="grupo-agregar">
+                    <label for="agregar-jugador">Agregar Jugador a la Plantilla</label>
+                    <div class="fila-controles">
+                        <select id="agregar-jugador"></select>
+                        <button type="button" id="btn-agregar">Agregar</button>
+                    </div>
+                    <span class="mensaje-error" id="error-agregar"></span>
+                </div>
+            </article>
         </section>
     </main>
 
     <footer>
-        <p>eSports Arena Manager — footer informativo</p>
+        <p>eSports Arena Manager — Plataforma oficial de Torneos | Evaluación DSY1104</p>
     </footer>
 
     <script src="js/datos.js"></script>

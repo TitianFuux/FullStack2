@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const torneoActualId = "t1";
+    const params = new URLSearchParams(window.location.search);
+    const torneoActualId = params.get("id") || "t1";
     const torneo = TORNEOS.find(t => t.id === torneoActualId);
 
     const contenedorDetalle = document.getElementById("detalle-torneo");
@@ -18,13 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const detalleConfirmacion = document.getElementById("detalle-confirmacion");
 
     if (!torneo) {
-        contenedorDetalle.innerHTML =
-            "<p>No se encontró el torneo seleccionado.</p>";
-        form.hidden = true;
+        if (contenedorDetalle) {
+            contenedorDetalle.innerHTML = "<p class='mensaje-error'>No se encontró el torneo seleccionado.</p>";
+        }
+        if (form) form.hidden = true;
         return;
     }
 
-    const juegoDelTorneo = JUEGOS.find(j => j.id === torneo.juegoId);
+    const juegoDelTorneo = JUEGOS.find(j => j.id === torneo.juegoId) || { nombre: "General", integrantesPorEquipo: 1 };
 
     function mostrarDetalleTorneo() {
         const inscritos = torneo.cupoOcupado + inscripciones.filter(
@@ -32,26 +34,25 @@ document.addEventListener("DOMContentLoaded", function () {
         ).length;
 
         contenedorDetalle.innerHTML = `
-            <p><strong>Torneo:</strong> ${torneo.nombre}</p>
+            <h3>${torneo.nombre}</h3>
             <p><strong>Juego:</strong> ${juegoDelTorneo.nombre}</p>
             <p><strong>Modalidad:</strong> ${torneo.modalidad}</p>
             <p><strong>Cupos:</strong> ${inscritos} de ${torneo.cupoMaximo}</p>
             <p><strong>Cierre de inscripción:</strong> ${torneo.fechaCierreInscripcion}</p>
-            <p>${torneo.descripcion}</p>
+            <p class="descripcion-torneo">${torneo.descripcion}</p>
         `;
 
         listaRequisitos.innerHTML = `
             <li>Modalidad: ${torneo.modalidad}</li>
             <li>Integrantes mínimos por equipo: ${juegoDelTorneo.integrantesPorEquipo}</li>
-            <li>Cupo máximo: ${torneo.cupoMaximo}</li>
+            <li>Cupo máximo del torneo: ${torneo.cupoMaximo} equipos</li>
+            <li>El capitán no debe tener sanciones vigentes.</li>
         `;
     }
 
     function llenarSelectorDeEquipos() {
         const equiposDisponibles = EQUIPOS.filter(
-            equipo =>
-                equipo.juegoId === torneo.juegoId &&
-                equipo.activo
+            equipo => equipo.juegoId === torneo.juegoId && equipo.activo
         );
 
         selectEquipo.innerHTML =
@@ -78,15 +79,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const hoy = new Date().toISOString().split("T")[0];
 
         if (hoy > torneo.fechaCierreInscripcion) {
-            errores.push(
-                "El plazo de inscripción para este torneo ya cerró."
-            );
+            errores.push("El plazo de inscripción para este torneo ya cerró.");
         }
 
         if (torneo.estado !== "abierto") {
-            errores.push(
-                "Este torneo no está abierto para inscripciones."
-            );
+            errores.push("Este torneo no está abierto para inscripciones.");
         }
 
         const inscritos = torneo.cupoOcupado + inscripciones.filter(
@@ -108,29 +105,19 @@ document.addEventListener("DOMContentLoaded", function () {
             errores.push("Este equipo está inactivo.");
         }
 
-        if (equipo.integrantes.length <
-            juegoDelTorneo.integrantesPorEquipo) {
-            errores.push(
-                `El equipo necesita al menos ${juegoDelTorneo.integrantesPorEquipo} integrantes.`
-            );
+        if (equipo.integrantes.length < juegoDelTorneo.integrantesPorEquipo) {
+            errores.push(`El equipo necesita al menos ${juegoDelTorneo.integrantesPorEquipo} integrantes.`);
         }
 
         const capitan = JUGADORES.find(j => j.id === equipo.capitanId);
 
-        if (
-            capitan &&
-            capitan.sanciones.some(sancion => sancion.vigente)
-        ) {
-            errores.push(
-                `El capitán ${capitan.apodo} tiene una sanción vigente.`
-            );
+        if (capitan && capitan.sanciones.some(sancion => sancion.vigente)) {
+            errores.push(`El capitán ${capitan.apodo} tiene una sanción vigente.`);
         }
 
         const yaInscrito = torneo.participantes.includes(equipo.nombre) ||
             inscripciones.some(
-                inscripcion =>
-                    inscripcion.torneoId === torneo.id &&
-                    inscripcion.equipoId === equipo.id
+                inscripcion => inscripcion.torneoId === torneo.id && inscripcion.equipoId === equipo.id
             );
 
         if (yaInscrito) {
@@ -148,20 +135,17 @@ document.addEventListener("DOMContentLoaded", function () {
         mensajeBloqueo.hidden = true;
 
         if (selectTipo.value === "") {
-            errorTipo.textContent =
-                "Debes seleccionar cómo te inscribirás.";
+            errorTipo.textContent = "Debes seleccionar cómo te inscribirás.";
             return;
         }
 
         if (selectTipo.value !== "equipo") {
-            errorTipo.textContent =
-                "Este torneo requiere inscripción por equipo.";
+            errorTipo.textContent = "Este torneo requiere inscripción por equipo.";
             return;
         }
 
         if (selectEquipo.value === "") {
-            errorEquipo.textContent =
-                "Debes seleccionar tu equipo.";
+            errorEquipo.textContent = "Debes seleccionar tu equipo.";
             return;
         }
 
@@ -173,9 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const equipo = EQUIPOS.find(
-            e => e.id === selectEquipo.value
-        );
+        const equipo = EQUIPOS.find(e => e.id === selectEquipo.value);
 
         inscripciones.push({
             id: "i" + (inscripciones.length + 1),
@@ -192,9 +174,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     mostrarDetalleTorneo();
-
-    // Para este torneo, que es por equipos.
-    selectTipo.innerHTML =
-        '<option value="">Selecciona una opción</option>' +
-        '<option value="equipo">Equipo</option>';
 });

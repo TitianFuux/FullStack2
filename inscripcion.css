@@ -1,0 +1,241 @@
+:root {
+    --fondo: #0E0B16;
+    --superficie: #1C1430;
+    --superficie-tarjeta: #251B3E;
+    --primario: #9146FF;
+    --acento: #00F5D4;
+    --texto: #F1ECFF;
+    --texto-mutado: #A594FD;
+    --error: #FF5C7A;
+    --exito: #00E676;
+    --borde: rgba(145, 70, 255, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--fondo);
+    color: var(--texto);
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--superficie);
+    padding: 1rem 2rem;
+    border-bottom: 2px solid var(--primario);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+nav h2 {
+    color: var(--acento);
+    font-size: 1.4rem;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+nav a {
+    color: var(--texto);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+nav a:hover,
+nav a.activo {
+    color: var(--acento);
+}
+
+main {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+h1 {
+    color: var(--acento);
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--borde);
+    padding-bottom: 0.5rem;
+}
+
+h2 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+/* Tarjetas y Estructura */
+article {
+    background-color: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tarjeta-torneo-detalle .imagen-banner {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--borde);
+}
+
+#detalle-torneo h3 {
+    color: var(--acento);
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+}
+
+#detalle-torneo p {
+    margin-bottom: 0.4rem;
+}
+
+.descripcion-torneo {
+    margin-top: 0.8rem;
+    background-color: var(--superficie-tarjeta);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--primario);
+}
+
+#lista-requisitos {
+    list-style-type: square;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+#lista-requisitos li {
+    margin-bottom: 0.3rem;
+    color: var(--texto-mutado);
+}
+
+/* Video Embebido */
+.marco-video {
+    position: relative;
+    padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    border: 1px solid var(--primario);
+}
+
+.marco-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Formulario de Inscripción */
+fieldset {
+    border: 1px solid var(--borde);
+    border-radius: 6px;
+    padding: 1.2rem;
+    margin-bottom: 1.2rem;
+    background-color: var(--superficie-tarjeta);
+}
+
+legend {
+    color: var(--acento);
+    font-weight: bold;
+    padding: 0 0.5rem;
+}
+
+.grupo-campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.grupo-campo label {
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+}
+
+.grupo-campo select {
+    padding: 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--primario);
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-size: 1rem;
+}
+
+button[type="submit"] {
+    background-color: var(--primario);
+    color: #ffffff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #7925e6;
+}
+
+.mensaje-error {
+    color: var(--error);
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    display: block;
+}
+
+#mensaje-bloqueo {
+    background-color: rgba(255, 92, 122, 0.15);
+    border: 1px solid var(--error);
+    padding: 0.8rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.tarjeta-exito {
+    background-color: rgba(0, 230, 118, 0.1);
+    border: 1px solid var(--exito);
+    color: var(--texto);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.tarjeta-exito h2 {
+    color: var(--exito);
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: var(--superficie);
+    margin-top: 2rem;
+    border-top: 1px solid var(--borde);
+    font-size: 0.9rem;
+    color: var(--texto-mutado);
+}

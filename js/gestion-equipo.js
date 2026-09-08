@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorJuego = document.getElementById("error-juego");
     const errorCapitan = document.getElementById("error-capitan");
 
+    const seccionIntegrantes = document.getElementById("integrantes-equipo");
     const listaIntegrantes = document.getElementById("lista-integrantes");
     const selectAgregarJugador = document.getElementById("agregar-jugador");
     const btnAgregar = document.getElementById("btn-agregar");
@@ -16,9 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let equipoEnEdicion = null;
 
     function idJugadorDe(integrante) {
-        return typeof integrante === "object"
-            ? integrante.jugadorId
-            : integrante;
+        return typeof integrante === "object" ? integrante.jugadorId : integrante;
     }
 
     function llenarSelectorJuegos() {
@@ -37,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         selectCapitan.innerHTML =
             '<option value="">Selecciona un capitán</option>' +
             JUGADORES.map(jugador =>
-                `<option value="${jugador.id}">${jugador.apodo}</option>`
+                `<option value="${jugador.id}">${jugador.apodo} (${jugador.nombre})</option>`
             ).join("");
     }
 
@@ -49,13 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function llenarSelectorAgregarJugador() {
-        const juegoId = selectJuego.value;
-
-        if (!juegoId) {
-            selectAgregarJugador.innerHTML =
-                '<option value="">Selecciona primero un juego</option>';
-            return;
-        }
+        if (!equipoEnEdicion) return;
 
         const disponibles = JUGADORES.filter(
             jugador => !jugadorEnEquipo(jugador.id)
@@ -70,10 +63,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderizarIntegrantes() {
         if (!equipoEnEdicion) {
-            listaIntegrantes.innerHTML =
-                "<li>Todavía no has creado un equipo.</li>";
+            seccionIntegrantes.hidden = true;
             return;
         }
+
+        seccionIntegrantes.hidden = false;
 
         listaIntegrantes.innerHTML = equipoEnEdicion.integrantes.map(integrante => {
             const idJugador = idJugadorDe(integrante);
@@ -84,9 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const esCapitan = idJugador === equipoEnEdicion.capitanId;
 
             return `
-                <li>
-                    <strong>${jugador.apodo}</strong>
-                    ${esCapitan ? " (Capitán)" : ""}
+                <li class="item-integrante">
+                    <span>
+                        <strong>${jugador.apodo}</strong> — ${jugador.nombre}
+                        ${esCapitan ? ' <span class="badge capitan">Capitán</span>' : ' <span class="badge titular">Titular</span>'}
+                    </span>
                     <button type="button"
                             class="btn-quitar"
                             data-id="${jugador.id}"
@@ -112,10 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        equipoEnEdicion.integrantes =
-            equipoEnEdicion.integrantes.filter(
-                integrante => idJugadorDe(integrante) !== idJugador
-            );
+        equipoEnEdicion.integrantes = equipoEnEdicion.integrantes.filter(
+            integrante => idJugadorDe(integrante) !== idJugador
+        );
 
         renderizarIntegrantes();
         llenarSelectorAgregarJugador();
@@ -133,8 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const capitanId = selectCapitan.value;
 
         if (nombre.length < 3) {
-            errorNombre.textContent =
-                "El nombre debe tener al menos 3 caracteres.";
+            errorNombre.textContent = "El nombre debe tener al menos 3 caracteres.";
             return;
         }
 
@@ -143,36 +137,31 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         if (repetido) {
-            errorNombre.textContent =
-                "Ya existe un equipo con ese nombre.";
+            errorNombre.textContent = "Ya existe un equipo con ese nombre.";
             return;
         }
 
         const juego = JUEGOS.find(j => j.id === juegoId);
 
         if (!juego || juego.modalidad !== "Equipos") {
-            errorJuego.textContent =
-                "Debes seleccionar un juego con modalidad por equipos.";
+            errorJuego.textContent = "Debes seleccionar un juego con modalidad por equipos.";
             return;
         }
 
         if (!capitanId) {
-            errorCapitan.textContent =
-                "Debes seleccionar un capitán.";
+            errorCapitan.textContent = "Debes seleccionar un capitán.";
             return;
         }
 
         const capitan = JUGADORES.find(j => j.id === capitanId);
 
         if (!capitan) {
-            errorCapitan.textContent =
-                "El capitán seleccionado no existe.";
+            errorCapitan.textContent = "El capitán seleccionado no existe.";
             return;
         }
 
         if (capitan.sanciones.some(sancion => sancion.vigente)) {
-            errorCapitan.textContent =
-                "El capitán tiene una sanción vigente y no puede crear el equipo.";
+            errorCapitan.textContent = "El capitán tiene una sanción vigente y no puede crear el equipo.";
             return;
         }
 
@@ -192,36 +181,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
         EQUIPOS.push(equipoEnEdicion);
 
+        // Bloquear cambio de juego al estar el equipo creado
+        selectJuego.disabled = true;
+
         renderizarIntegrantes();
         llenarSelectorAgregarJugador();
 
-        alert("Equipo creado correctamente.");
-    });
-
-    selectJuego.addEventListener("change", function () {
-        llenarSelectorAgregarJugador();
+        alert(`Equipo "${nombre}" creado correctamente.`);
     });
 
     btnAgregar.addEventListener("click", function () {
         errorAgregar.textContent = "";
 
         if (!equipoEnEdicion) {
-            errorAgregar.textContent =
-                "Primero debes crear un equipo.";
+            errorAgregar.textContent = "Primero debes crear un equipo.";
+            return;
+        }
+
+        const juego = JUEGOS.find(j => j.id === equipoEnEdicion.juegoId);
+        if (juego && equipoEnEdicion.integrantes.length >= juego.integrantesPorEquipo) {
+            errorAgregar.textContent = `La nómina máxima para ${juego.nombre} es de ${juego.integrantesPorEquipo} jugadores.`;
             return;
         }
 
         const idSeleccionado = selectAgregarJugador.value;
 
         if (!idSeleccionado) {
-            errorAgregar.textContent =
-                "Selecciona un jugador para agregar.";
+            errorAgregar.textContent = "Selecciona un jugador para agregar.";
             return;
         }
 
         if (jugadorEnEquipo(idSeleccionado)) {
-            errorAgregar.textContent =
-                "Ese jugador ya está en el equipo.";
+            errorAgregar.textContent = "Ese jugador ya está en el equipo.";
             return;
         }
 
@@ -236,6 +227,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     llenarSelectorJuegos();
     llenarSelectorCapitanes();
-    llenarSelectorAgregarJugador();
     renderizarIntegrantes();
 });

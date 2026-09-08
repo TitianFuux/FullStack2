@@ -1,0 +1,272 @@
+:root {
+    --fondo: #0E0B16;
+    --superficie: #1C1430;
+    --superficie-tarjeta: #251B3E;
+    --primario: #9146FF;
+    --acento: #00F5D4;
+    --texto: #F1ECFF;
+    --texto-mutado: #A594FD;
+    --error: #FF5C7A;
+    --exito: #00E676;
+    --borde: rgba(145, 70, 255, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--fondo);
+    color: var(--texto);
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--superficie);
+    padding: 1rem 2rem;
+    border-bottom: 2px solid var(--primario);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+nav h2 {
+    color: var(--acento);
+    font-size: 1.4rem;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+nav a {
+    color: var(--texto);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+nav a:hover,
+nav a.activo {
+    color: var(--acento);
+}
+
+main {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+h1 {
+    color: var(--acento);
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--borde);
+    padding-bottom: 0.5rem;
+}
+
+h2 {
+    color: var(--texto);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+article {
+    background-color: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Formulario Crear Equipo */
+.grupo-campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+}
+
+.grupo-campo label {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+}
+
+.grupo-campo input,
+.grupo-campo select {
+    padding: 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--primario);
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-size: 1rem;
+}
+
+.grupo-campo input:disabled,
+.grupo-campo select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.grupo-campo small {
+    color: var(--texto-mutado);
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+button[type="submit"],
+#btn-agregar {
+    background-color: var(--primario);
+    color: #ffffff;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button[type="submit"]:hover,
+#btn-agregar:hover {
+    background-color: #7925e6;
+}
+
+/* Plantilla e Integrantes */
+.cabecera-equipo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--borde);
+    padding-bottom: 1rem;
+}
+
+.avatar-equipo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--acento);
+    object-fit: cover;
+}
+
+#lista-integrantes {
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+.item-integrante {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--superficie-tarjeta);
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.6rem;
+    border: 1px solid var(--borde);
+}
+
+.badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-left: 0.5rem;
+}
+
+.badge.capitan {
+    background-color: var(--primario);
+    color: #ffffff;
+}
+
+.badge.titular {
+    background-color: var(--acento);
+    color: #0E0B16;
+}
+
+.btn-quitar {
+    background-color: var(--error);
+    color: #ffffff;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-quitar[disabled] {
+    background-color: #555555;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.grupo-agregar {
+    background-color: var(--superficie-tarjeta);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--acento);
+}
+
+.fila-controles {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.fila-controles select {
+    flex: 1;
+    padding: 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--primario);
+    background-color: var(--fondo);
+    color: var(--texto);
+}
+
+/* Video Embebido */
+.marco-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    border: 1px solid var(--primario);
+}
+
+.marco-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.mensaje-error {
+    color: var(--error);
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    display: block;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: var(--superficie);
+    margin-top: 2rem;
+    border-top: 1px solid var(--borde);
+    font-size: 0.9rem;
+    color: var(--texto-mutado);
+}

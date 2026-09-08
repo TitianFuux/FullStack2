@@ -3,60 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="estilos.css">
-    <title>Inscripción a torneo | eSports Arena Manager</title>
+    <link rel="stylesheet" href="inscripcion.css">
+    <title>Inscripción a Torneo | eSports Arena Manager</title>
 </head>
 <body>
 
     <header>
         <nav>
-            <li><a href="inicio.html">Inicio</a></li>
-            <li><a href="torneos.html">Torneos</a></li>
-            <li><a href="perfil.html">Perfil de jugador</a></li>
-            <li><a href="Gestion.HTML">Mi Equipo</a></li>
+            <h2>eSports Arena</h2>
+            <ul>
+                <li><a href="inicio.html">Inicio</a></li>
+                <li><a href="torneos.html">Torneos</a></li>
+                <li><a href="inscripcion.html" class="activo">Inscripción</a></li>
+                <li><a href="perfil.html">Perfil de jugador</a></li>
+                <li><a href="gestion.html">Mi Equipo</a></li>
+            </ul>
         </nav>
     </header>
 
     <main>
         <section id="resumen-torneo">
-            <h1>Inscripción a torneo</h1>
-            <div id="detalle-torneo"></div>
-            <ul id="lista-requisitos"></ul>
+            <h1>Inscripción a Torneo</h1>
+            
+            <article class="tarjeta-torneo-detalle">
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="Banner Oficial del Torneo eSports" class="imagen-banner">
+                <div id="detalle-torneo"></div>
+                <h2>Requisitos del Torneo</h2>
+                <ul id="lista-requisitos"></ul>
+            </article>
+
+            <article class="contenedor-video">
+                <h2>Tráiler y Reglamento del Torneo</h2>
+                <div class="marco-video">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Tráiler del Torneo" allowfullscreen></iframe>
+                </div>
+            </article>
         </section>
 
         <section id="formulario-inscripcion">
-            <form id="form-inscripcion" autocomplete="on">
-                <fieldset>
-                    <legend>Tipo de participante</legend>
+            <article class="tarjeta-formulario">
+                <h2>Formulario de Registro</h2>
+                <form id="form-inscripcion" autocomplete="on">
+                    <fieldset>
+                        <legend>Tipo de participante</legend>
 
-                    <label for="tipo-participante">¿Cómo se inscribirá?</label>
-                    <select name="tipoParticipante" id="tipo-participante" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="jugador">Jugador</option>
-                        <option value="equipo">Equipo</option>
-                    </select>
-                    <span class="mensaje-error" id="error-tipo"></span>
+                        <div class="grupo-campo">
+                            <label for="tipo-participante">¿Cómo se inscribirá?</label>
+                            <select name="tipoParticipante" id="tipo-participante" required>
+                                <option value="">Selecciona una opción</option>
+                                <option value="equipo">Equipo</option>
+                            </select>
+                            <span class="mensaje-error" id="error-tipo"></span>
+                        </div>
 
-                    <div id="contenedor-selector-equipo" hidden>
-                        <label for="selector-equipo">Selecciona tu equipo</label>
-                        <select name="equipoId" id="selector-equipo"></select>
-                        <span class="mensaje-error" id="error-equipo"></span>
-                    </div>
-                </fieldset>
+                        <div class="grupo-campo" id="contenedor-selector-equipo" hidden>
+                            <label for="selector-equipo">Selecciona tu equipo</label>
+                            <select name="equipoId" id="selector-equipo"></select>
+                            <span class="mensaje-error" id="error-equipo"></span>
+                        </div>
+                    </fieldset>
 
-                <p id="mensaje-bloqueo" class="mensaje-error" hidden></p>
-                <button type="submit" id="btn-confirmar">Confirmar inscripción</button>
-            </form>
+                    <p id="mensaje-bloqueo" class="mensaje-error" hidden></p>
+                    <button type="submit" id="btn-confirmar">Confirmar inscripción</button>
+                </form>
 
-            <div id="confirmacion" hidden>
-                <h2>¡Inscripción confirmada!</h2>
-                <p id="detalle-confirmacion"></p>
-            </div>
+                <div id="confirmacion" class="tarjeta-exito" hidden>
+                    <h2>¡Inscripción confirmada!</h2>
+                    <p id="detalle-confirmacion"></p>
+                </div>
+            </article>
         </section>
     </main>
 
     <footer>
-        <p>eSports Arena Manager — footer informativo</p>
+        <p>eSports Arena Manager — Plataforma oficial de Torneos | Evaluación DSY1104</p>
     </footer>
 
     <script src="js/datos.js"></script>
