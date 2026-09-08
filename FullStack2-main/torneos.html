@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eSports Arena Manager — Torneos</title>
+<link rel="stylesheet" href="css/torneos.css">
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="contenedor">
+    <a class="marca" href="index.html">Arena<span>Manager</span></a>
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <ul>
+        <li><a href="inicio.html">Inicio</a></li>
+        <li><a href="torneos.html" aria-current="page">Torneos</a></li>
+        <li><a href="inscripcion.html">Inscripción</a></li>
+        <li><a href="equipo.html">Mi equipo</a></li>
+        <li><a href="perfil.html">Perfil</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido-principal">
+  <section class="franja">
+    <div class="contenedor">
+      <h1>Todos los torneos</h1>
+      <p>Filtra por juego, estado o rango de fechas, o busca directamente por nombre.</p>
+
+      <form id="form-filtros" class="panel-filtros" novalidate>
+        <div class="campo">
+          <label for="filtro-busqueda">Buscar por nombre</label>
+          <input type="search" id="filtro-busqueda" name="busqueda" placeholder="Ej: Copa, Liga...">
+        </div>
+        <div class="campo">
+          <label for="filtro-juego">Juego</label>
+          <select id="filtro-juego" name="juego">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="filtro-estado">Estado</label>
+          <select id="filtro-estado" name="estado">
+            <option value="">Todos</option>
+            <option value="abierto">Abierto</option>
+            <option value="en_curso">En curso</option>
+            <option value="finalizado">Finalizado</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="filtro-desde">Inicio desde</label>
+          <input type="date" id="filtro-desde" name="desde">
+        </div>
+        <div class="campo">
+          <label for="filtro-hasta">Inicio hasta</label>
+          <input type="date" id="filtro-hasta" name="hasta">
+          <span class="mensaje-error" id="error-rango-fechas" role="alert"></span>
+        </div>
+        <div class="campo">
+          <button type="button" id="boton-limpiar" class="boton boton-secundario">Limpiar filtros</button>
+        </div>
+      </form>
+
+      <div id="lista-torneos" class="grilla-tarjetas" aria-live="polite">
+        <!-- Se llena por JavaScript desde datos.js -->
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="contenedor">
+    <p>© 2026 eSports Arena Manager. Proyecto académico de Desarrollo FullStack II — DSY1104.</p>
+    <nav aria-label="Enlaces del pie de página">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="perfil.html">Perfil</a></li>
+        <li><a href="mailto:contacto@arenamanager.cl">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<script src="js/datos.js"></script>
+<script src="js/torneos.js"></script>
+</body>
+</html>
