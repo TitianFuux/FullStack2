@@ -44,7 +44,5 @@ function mostrarCierres() {
     contenedorCierres.innerHTML = html;
 }
 
-//aaa
 
 mostrarDestacados();
-mostrarCierres();
