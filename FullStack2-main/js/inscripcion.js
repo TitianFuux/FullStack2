@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!juegoDelTorneo) {
         contenedorDetalle.innerHTML =
-            "<p>No se encontró el juego asociado al torneo.</p>";
+            "<p>No se encontro el juego asociado al torneo.</p>";
         form.hidden = true;
         return;
     }

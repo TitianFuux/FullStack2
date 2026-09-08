@@ -11,8 +11,7 @@ const EQUIPOS = [
       { jugadorId: "j1", rol: "Capitán" },
       { jugadorId: "j2", rol: "Titular" },
       { jugadorId: "j3", rol: "Titular" },
-      { jugadorId: "j4", rol: "Suplente" },
-      { jugadorId: "j5", rol: "Suplente" }
+      { jugadorId: "j4", rol: "Suplente" }
     ] },
   { id: "e2", nombre: "Rúnicos del Sur", juegoId: "g4", capitanId: "j5", activo: true,
     integrantes: [

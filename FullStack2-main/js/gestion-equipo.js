@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function llenarSelectorCapitanes() {
         selectCapitan.innerHTML =
-            '<option value="">Selecciona un capitán</option>' +
+            '<option value="">Selecciona un capitan</option>' +
             JUGADORES.map(jugador =>
                 `<option value="${jugador.id}">${jugador.apodo}</option>`
             ).join("");
