@@ -67,9 +67,9 @@ const TORNEOS = [
     ranking: [],
     premios: [],
   }
+  
 ];
 
-// Arreglo global para almacenar inscripciones en memoria y evitar el ReferenceError
 let inscripciones = [
   { id: "i1", torneoId: "t1", tipo: "equipo", equipoId: "e1" }
 ];

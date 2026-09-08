@@ -9,7 +9,6 @@
   --espaciado: 1rem;
 }
 
-/* ===== Reset básico ===== */
 * {
   box-sizing: border-box;
 }
@@ -27,7 +26,6 @@ h1, h2, h3, legend {
   color: var(--color-texto);
 }
 
-/* ===== Header y navegación ===== */
 header {
   background: var(--color-superficie);
   padding: var(--espaciado);
@@ -55,7 +53,6 @@ header nav a:focus {
   text-decoration: underline;
 }
 
-/* ===== Layout principal ===== */
 main {
   max-width: 900px;
   margin: 0 auto;
@@ -71,7 +68,6 @@ section {
   padding: 1.5rem;
 }
 
-/* ===== Resumen del torneo ===== */
 #detalle-torneo p {
   margin: 0.25rem 0;
 }
@@ -85,7 +81,6 @@ section {
   margin-bottom: 0.35rem;
 }
 
-/* ===== Formularios (compartido por ambas vistas) ===== */
 form {
   display: flex;
   flex-direction: column;
@@ -127,11 +122,10 @@ select:focus {
   outline-offset: 2px;
 }
 
-/* ===== Botones ===== */
 button {
   align-self: flex-start;
   background: var(--color-primario);
-  color: #FFFFFF; /* blanco, cumple contraste 4.6:1 según el caso */
+  color: #FFFFFF; 
   border: none;
   border-radius: var(--radio-borde);
   padding: 0.7rem 1.4rem;
@@ -148,10 +142,9 @@ button:focus {
 
 button[type="button"] {
   background: var(--color-acento);
-  color: #0E0B16; /* texto oscuro sobre el acento, mejor contraste */
+  color: #0E0B16; 
 }
 
-/* Botón "Quitar" dentro de la lista de integrantes */
 .btn-quitar {
   align-self: auto;
   margin-left: 0.75rem;
@@ -161,7 +154,6 @@ button[type="button"] {
   color: #FFFFFF;
 }
 
-/* ===== Mensajes de error ===== */
 .mensaje-error {
   display: block;
   color: var(--color-error);
@@ -173,12 +165,10 @@ button[type="button"] {
   display: none;
 }
 
-/* El atributo hidden siempre gana */
 [hidden] {
   display: none !important;
 }
 
-/* ===== Confirmación de inscripción ===== */
 #confirmacion {
   border: 2px solid var(--color-acento);
   border-radius: var(--radio-borde);
@@ -186,7 +176,6 @@ button[type="button"] {
   text-align: center;
 }
 
-/* ===== Lista de integrantes del equipo ===== */
 #lista-integrantes {
   list-style: none;
   padding: 0;
@@ -204,7 +193,6 @@ button[type="button"] {
   padding: 0.6rem 1rem;
 }
 
-/* ===== Footer ===== */
 footer {
   background: var(--color-superficie);
   color: var(--color-texto);
@@ -213,7 +201,6 @@ footer {
   margin-top: 2rem;
 }
 
-/* ===== Responsivo simple ===== */
 @media (max-width: 600px) {
   main {
     padding: 1rem;

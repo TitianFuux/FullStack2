@@ -83,7 +83,6 @@ h2 {
     margin-bottom: 1rem;
 }
 
-/* Tarjetas y Estructura */
 article {
     background-color: var(--superficie);
     border: 1px solid var(--borde);
@@ -130,10 +129,9 @@ article {
     color: var(--texto-mutado);
 }
 
-/* Video Embebido */
 .marco-video {
     position: relative;
-    padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+    padding-bottom: 56.25%; 
     height: 0;
     overflow: hidden;
     border-radius: 6px;
@@ -149,7 +147,6 @@ article {
     border: 0;
 }
 
-/* Formulario de Inscripción */
 fieldset {
     border: 1px solid var(--borde);
     border-radius: 6px;

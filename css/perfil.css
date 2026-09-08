@@ -70,7 +70,6 @@ p {
   color: #B6A9DE;
 }
 
-/* Encabezado */
 .cabecera {
   background: #1C1430;
   border-bottom: 1px solid #362A54;
@@ -126,7 +125,6 @@ p {
   border-bottom-color: #9146FF;
 }
 
-/* Layout dos columnas */
 .dos-columnas { 
   display: grid; 
   grid-template-columns: 2fr 1fr; 
@@ -140,7 +138,6 @@ p {
   } 
 }
 
-/* Ficha y Stats */
 .tarjeta-stat {
   background: #241B3D;
   border: 1px solid #362A54;
@@ -166,7 +163,6 @@ p {
   gap: 1rem; 
 }
 
-/* Tablas */
 table { 
   width: 100%; 
   border-collapse: collapse; 
@@ -195,7 +191,6 @@ tr:last-child td {
   border-radius: 4px; 
 }
 
-/* Integrantes y Sanciones */
 .lista-integrantes { 
   list-style: none; 
   margin: 0; 
@@ -225,7 +220,6 @@ tr:last-child td {
   width: fit-content;
 }
 
-/* Formularios */
 .formulario {
   background: #1C1430;
   border: 1px solid #362A54;
@@ -320,7 +314,6 @@ tr:last-child td {
   text-decoration: none; 
 }
 
-/* Pie de página */
 .pie {
   background: #1C1430;
   border-top: 1px solid #362A54;

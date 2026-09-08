@@ -25,7 +25,6 @@ function aplicarFiltros() {
   const hasta = document.getElementById("filtro-hasta").value;
   const errorRango = document.getElementById("error-rango-fechas");
 
-  // Validación: la fecha inicial no puede ser posterior a la final.
   if (desde && hasta && desde > hasta) {
     errorRango.textContent = "La fecha inicial no puede ser posterior a la final.";
     renderizarTorneos([]);

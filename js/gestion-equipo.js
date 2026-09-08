@@ -181,7 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         EQUIPOS.push(equipoEnEdicion);
 
-        // Bloquear cambio de juego al estar el equipo creado
         selectJuego.disabled = true;
 
         renderizarIntegrantes();

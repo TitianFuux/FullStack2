@@ -98,7 +98,6 @@ function crearSeccionLlaves(torneo) {
     <ul class="lista-partidas" id="lista-partidas"></ul>
   `;
 
-  // La ronda visible se maneja como estado local en memoria (equivalente al useState de EP2).
   let rondaActiva = 0;
 
   function pintarRonda() {
@@ -127,7 +126,6 @@ function crearSeccionLlaves(torneo) {
     pintarRonda();
   });
 
-  // Primer pintado se hace después de insertar en el DOM real (ver más abajo).
   setTimeout(pintarRonda, 0);
   return seccion;
 }
