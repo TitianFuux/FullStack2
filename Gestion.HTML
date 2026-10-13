@@ -1,98 +1,104 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/gestion.css">
-    <title>Gestión de Equipo | eSports Arena Manager</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eSports Arena Manager — Gestión de Equipo</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <header>
-        <nav>
-            <h2>eSports Arena</h2>
-            <ul>
-                <li><a href="inicio.html">Inicio</a></li>
-                <li><a href="torneos.html">Torneos</a></li>
-                <li><a href="inscripcion.html">Inscripción</a></li>
-                <li><a href="Gestion.HTML" class="activo">Mi equipo</a></li>
-                <li><a href="perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
-    </header>
+<header class="cabecera">
+  <div class="contenedor">
+    <a class="marca" href="inicio.html"> eSports Arena<span>Manager</span></a>
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <ul>
+        <li><a href="inicio.html">Inicio</a></li>
+        <li><a href="torneos.html">Torneos</a></li>
+        <li><a href="inscripcion.html">Inscripción</a></li>
+        <li><a href="Gestion.HTML" aria-current="page">Mi equipo</a></li>
+        <li><a href="perfil.html">Perfil</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
-    <main>
-        <section id="crear-equipo">
-            <h1>Gestión de Mi Equipo</h1>
+<main id="contenido-principal">
+  <section class="franja">
+    <div class="contenedor">
+      <h1>Gestión de Mi Equipo</h1>
 
-            <article class="tarjeta-gestion">
-                <h2>Crear un Nuevo Equipo</h2>
-                <form id="form-equipo" autocomplete="on">
+      <div class="dos-columnas">
+        <div>
+          <h2>Crear un Nuevo Equipo</h2>
+          <form id="form-equipo" class="formulario" autocomplete="on" novalidate>
+            <div class="campo">
+              <label for="nombre-equipo">Nombre del equipo</label>
+              <input type="text" id="nombre-equipo" name="nombreEquipo" required minlength="3" placeholder="Ej: Halcones de Neón">
+              <span class="ayuda">Mínimo 3 caracteres, sin duplicados.</span>
+              <span class="mensaje-error" id="error-nombre"></span>
+            </div>
 
-                    <div class="grupo-campo">
-                        <label for="nombre-equipo">Nombre del equipo</label>
-                        <input type="text" id="nombre-equipo" name="nombreEquipo" required minlength="3"
-                            autocomplete="off" aria-describedby="ayuda-nombre">
-                        <small id="ayuda-nombre">Mínimo 3 caracteres, no se permite repetir nombres ya usados.</small>
-                        <span class="mensaje-error" id="error-nombre"></span>
-                    </div>
+            <div class="campo">
+              <label for="juego-principal">Juego principal</label>
+              <select id="juego-principal" name="juegoPrincipal" required>
+                <option value="">Selecciona un juego</option>
+              </select>
+              <span class="ayuda">Define la cantidad de integrantes permitidos.</span>
+              <span class="mensaje-error" id="error-juego"></span>
+            </div>
 
-                    <div class="grupo-campo">
-                        <label for="juego-principal">Juego principal</label>
-                        <select id="juego-principal" name="juegoPrincipal" required aria-describedby="ayuda-juego">
-                            <option value="">Selecciona un juego</option>
-                        </select>
-                        <small id="ayuda-juego">Define qué jugadores puedes elegir como integrantes.</small>
-                        <span class="mensaje-error" id="error-juego"></span>
-                    </div>
+            <div class="campo">
+              <label for="capitan">Capitán</label>
+              <select id="capitan" name="capitan" required>
+                <option value="">Selecciona un capitán</option>
+              </select>
+              <span class="ayuda">El capitán queda fijo y no se puede remover.</span>
+              <span class="mensaje-error" id="error-capitan"></span>
+            </div>
 
-                    <div class="grupo-campo">
-                        <label for="capitan">Capitán</label>
-                        <select id="capitan" name="capitan" required aria-describedby="ayuda-capitan">
-                            <option value="">Selecciona un capitán</option>
-                        </select>
-                        <small id="ayuda-capitan">El capitán queda como integrante fijo y no se puede quitar.</small>
-                        <span class="mensaje-error" id="error-capitan"></span>
-                    </div>
+            <button type="submit" id="btn-crear" class="boton boton-primario">Crear Equipo</button>
+          </form>
 
-                    <button type="submit" id="btn-crear">Crear Equipo</button>
-                </form>
-            </article>
+          <article style="margin-top: 2rem;">
+            <h2>Guía en Video: Armado de Nóminas</h2>
+            <div class="marco-video">
+              <iframe width="100%" height="280" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Guía de Gestión" style="border:0;" allowfullscreen></iframe>
+            </div>
+          </article>
+        </div>
 
-            <article class="contenedor-video">
-                <h2>Guía en Video: Armado de Nóminas y Estrategia</h2>
-                <div class="marco-video">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Guía de Gestión de Equipos" allowfullscreen></iframe>
-                </div>
-            </article>
-        </section>
+        <div id="integrantes-equipo" hidden>
+          <h2>Plantilla de Integrantes</h2>
+          <ul id="lista-integrantes" class="lista-integrantes"></ul>
 
-        <section id="integrantes-equipo" hidden>
-            <article class="tarjeta-gestion">
-                <div class="cabecera-equipo">
-                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=120&q=80" alt="Emblema del Equipo" class="avatar-equipo">
-                    <h2>Plantilla de Integrantes</h2>
-                </div>
+          <div class="formulario" style="margin-top: 1.5rem;">
+            <div class="campo">
+              <label for="agregar-jugador">Agregar Jugador</label>
+              <select id="agregar-jugador"></select>
+              <span class="mensaje-error" id="error-agregar"></span>
+            </div>
+            <button type="button" id="btn-agregar" class="boton boton-secundario">Agregar Jugador</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 
-                <ul id="lista-integrantes"></ul>
+<footer class="pie">
+  <div class="contenedor">
+    <p>© 2026 eSports Arena Manager</p>
+    <nav aria-label="Enlaces del pie de página">
+      <ul>
+        <li><a href="inicio.html">Inicio</a></li>
+        <li><a href="torneos.html">Torneos</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
 
-                <div class="grupo-agregar">
-                    <label for="agregar-jugador">Agregar Jugador a la Plantilla</label>
-                    <div class="fila-controles">
-                        <select id="agregar-jugador"></select>
-                        <button type="button" id="btn-agregar">Agregar</button>
-                    </div>
-                    <span class="mensaje-error" id="error-agregar"></span>
-                </div>
-            </article>
-        </section>
-    </main>
-
-    <footer>
-        <p>eSports Arena Manager — Plataforma oficial de Torneos | Evaluación DSY1104</p>
-    </footer>
-
-    <script src="js/datos.js"></script>
-    <script src="js/gestion-equipo.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/gestion-equipo.js"></script>
 </body>
 </html>

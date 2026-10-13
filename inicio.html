@@ -1,66 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eSports Arena Manager - Inicio</title>
-    <link rel="stylesheet" href="css/estilos.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eSports Arena Manager — Inicio</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <h2>eSports Arena</h2>
-            <ul>
-                <li><a href="inicio.html">Inicio</a></li>
-                <li><a href="torneos.html">Torneos</a></li>
-                <li><a href="inscripcion.html">Inscripción</a></li>
-                <li><a href="gestion.html">Mi equipo</a></li>
-                <li><a href="perfil.html">Perfil</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main id="contenido-principal">
-        <section class="franja">
-            <div class="contenedor">
-                <section class="hero">
-                    <h1>Bienvenido a eSports Arena Manager</h1>
-                    <p>La plataforma líder para competir y gestionar torneos de videojuegos.</p>
-                </section>
+<header class="cabecera">
+  <div class="contenedor">
+    <a class="marca" href="inicio.html"> eSports Arena<span>Manager</span></a>
+    <nav class="nav-principal" aria-label="Navegación principal">
+      <ul>
+        <li><a href="inicio.html" aria-current="page">Inicio</a></li>
+        <li><a href="torneos.html">Torneos</a></li>
+        <li><a href="inscripcion.html">Inscripción</a></li>
+        <li><a href="Gestion.HTML">Mi equipo</a></li>
+        <li><a href="perfil.html">Perfil</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
-                <section class="video">
-                    <h2>Gran Final Destacada</h2>
-                    <div>
-                        <iframe 
-                            width="560" 
-                            height="315" 
-                            src="https://www.youtube.com/embed/fmI_Ndrxy14" 
-                            title="Lol cinematica" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            allowfullscreen>
-                        </iframe>
-                    </div>
-                </section>
+<main id="contenido-principal">
+  <section class="franja">
+    <div class="contenedor">
+      <h1>Bienvenido a eSports Arena Manager</h1>
+      <p>La plataforma líder para competir y gestionar torneos de videojuegos.</p>
 
-                <section class="destacados caja-torneos">
-                    <h2>Torneos Destacados</h2>
-                    <div id="destacados" class="grilla"></div>
-                </section>
+      <div style="margin-top: 2rem;">
+        <h2>Gran Final Destacada</h2>
+        <div class="marco-video">
+          <iframe 
+            width="100%" 
+            height="360" 
+            src="https://www.youtube.com/embed/fmI_Ndrxy14" 
+            title="LoL Cinemática" 
+            style="border:0;" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
 
-                <section class="cierres caja-torneos">
-                    <h2>Próximos Cierres de Inscripción</h2>
-                    <div id="cierres" class="grilla"></div>
-                </section>
-            </div>
-        </section>
-    </main>
+      <div style="margin-top: 2.5rem;">
+        <h2>Torneos Destacados</h2>
+        <div id="destacados" class="grilla-tarjetas" aria-live="polite"></div>
+      </div>
 
-    <footer>
-        <p>&copy; 2026 eSports Arena Manager. Todos los derechos reservados.</p>
-    </footer>
+      <div style="margin-top: 2.5rem;">
+        <h2>Próximos Cierres de Inscripción</h2>
+        <div id="cierres" class="grilla-tarjetas" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+</main>
 
-    <script src="js/datos.js"></script>
-    <script src="js/inicio.js"></script>
+<footer class="pie">
+  <div class="contenedor">
+    <p>© 2026 eSports Arena Manager</p>
+    <nav aria-label="Enlaces del pie de página">
+      <ul>
+        <li><a href="inicio.html">Inicio</a></li>
+        <li><a href="torneos.html">Torneos</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<script src="js/datos.js"></script>
+<script src="js/inicio.js"></script>
 </body>
 </html>

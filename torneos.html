@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>eSports Arena Manager — Torneos</title>
-<link rel="stylesheet" href="css/torneos.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header class="cabecera">
   <div class="contenedor">
-    <a class="marca" href="index.html"> eSports Arena<span>Manager</span></a>
+    <a class="marca" href="inicio.html"> eSports Arena<span>Manager</span></a>
     <nav class="nav-principal" aria-label="Navegación principal">
       <ul>
         <li><a href="inicio.html">Inicio</a></li>
@@ -58,20 +58,25 @@
           <input type="date" id="filtro-hasta" name="hasta">
           <span class="mensaje-error" id="error-rango-fechas" role="alert"></span>
         </div>
-        <div class="campo">
+        <div class="campo" style="justify-content: flex-end;">
           <button type="button" id="boton-limpiar" class="boton boton-secundario">Limpiar filtros</button>
         </div>
       </form>
 
-      <div id="lista-torneos" class="grilla-tarjetas" aria-live="polite">
-      </div>
+      <div id="lista-torneos" class="grilla-tarjetas" aria-live="polite"></div>
     </div>
   </section>
 </main>
 
 <footer class="pie">
   <div class="contenedor">
-    <p>© 2026 eSports Arena Manager </p>
+    <p>© 2026 eSports Arena Manager</p>
+    <nav aria-label="Enlaces del pie de página">
+      <ul>
+        <li><a href="inicio.html">Inicio</a></li>
+        <li><a href="torneos.html">Torneos</a></li>
+      </ul>
+    </nav>
   </div>
 </footer>
 
