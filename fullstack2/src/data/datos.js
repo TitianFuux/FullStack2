@@ -1,11 +1,11 @@
-const JUEGOS = [
+export const JUEGOS = [
   { id: "g1", nombre: "League of Legends", integrantesPorEquipo: 5, modalidad: "Equipos" },
   { id: "g2", nombre: "Rocket League", integrantesPorEquipo: 3, modalidad: "Equipos" },
   { id: "g3", nombre: "Mario Kart 8 Deluxe", integrantesPorEquipo: 1, modalidad: "Individual" },
   { id: "g4", nombre: "Valorant", integrantesPorEquipo: 5, modalidad: "Equipos" },
 ];
 
-const EQUIPOS = [
+export const EQUIPOS = [
   { id: "e1", nombre: "Halcones de Neón", juegoId: "g1", capitanId: "j1", activo: true,
     integrantes: [
       { jugadorId: "j1", rol: "Capitán" },
@@ -24,7 +24,7 @@ const EQUIPOS = [
     ] },
 ];
 
-const JUGADORES = [
+export const JUGADORES = [
   { id: "j1", nombre: "Benjamin Cabrera", apodo: "DeusCabrex", correo: "deusCabrex@correo.cl",
     estadisticas: { victorias: 18, derrotas: 7 },
     historial: [
@@ -50,7 +50,7 @@ const JUGADORES = [
     sanciones: [] },
 ];
 
-const TORNEOS = [
+export const TORNEOS = [
   {
     id: "t1",
     nombre: "Copa Arena de Primavera",
@@ -67,14 +67,9 @@ const TORNEOS = [
     ranking: [],
     premios: [],
   }
-  
 ];
 
-let inscripciones = [
-  { id: "i1", torneoId: "t1", tipo: "equipo", equipoId: "e1" }
-];
-
-const Datos = {
+export const Datos = {
   obtenerJuegoPorId(id) { return JUEGOS.find((j) => j.id === id) || null; },
   obtenerTorneoPorId(id) { return TORNEOS.find((t) => t.id === id) || null; },
   obtenerEquipoPorNombre(nombre) { return EQUIPOS.find((e) => e.nombre === nombre) || null; },
