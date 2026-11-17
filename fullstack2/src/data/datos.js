@@ -78,4 +78,5 @@ export const Datos = {
   nombreEstado(estado) {
     return { abierto: "Abierto", en_curso: "En curso", finalizado: "Finalizado" }[estado] || estado;
   },
+  //si
 };
