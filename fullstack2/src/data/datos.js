@@ -79,4 +79,5 @@ export const Datos = {
     return { abierto: "Abierto", en_curso: "En curso", finalizado: "Finalizado" }[estado] || estado;
   },
   //si
+  //JbTheVoice
 };
