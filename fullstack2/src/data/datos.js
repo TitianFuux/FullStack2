@@ -4,7 +4,7 @@ export const JUEGOS = [
   { id: "g3", nombre: "Mario Kart 8 Deluxe", integrantesPorEquipo: 1, modalidad: "Individual" },
   { id: "g4", nombre: "Valorant", integrantesPorEquipo: 5, modalidad: "Equipos" },
 ];
-
+// Datos de ejemplo para torneos, equipos y jugadores
 export const EQUIPOS = [
   { id: "e1", nombre: "Halcones de Neón", juegoId: "g1", capitanId: "j1", activo: true,
     integrantes: [
