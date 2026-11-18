@@ -1,175 +1,346 @@
-import React, { useState } from 'react';
-import { JUEGOS, JUGADORES, EQUIPOS } from '../data/datos';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { api } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function GestionEquipo() {
-  const [nombre, setNombre] = useState('');
+  const { usuario, estaAutenticado, esAdmin } = useAuth();
+
+  const [equipos, setEquipos] = useState([]);
+  const [juegos, setJuegos] = useState([]);
+  const [jugadores, setJugadores] = useState([]);
+
+  const [nombreEquipo, setNombreEquipo] = useState('');
   const [juegoId, setJuegoId] = useState('');
   const [capitanId, setCapitanId] = useState('');
-  const [equipoEnEdicion, setEquipoEnEdicion] = useState(null);
 
-  const [idJugadorAgregar, setIdJugadorAgregar] = useState('');
-  const [errorNombre, setErrorNombre] = useState('');
-  const [errorJuego, setErrorJuego] = useState('');
-  const [errorCapitan, setErrorCapitan] = useState('');
-  const [errorAgregar, setErrorAgregar] = useState('');
+  const [seleccionIntegrante, setSeleccionIntegrante] = useState({});
 
-  const juegosEquipos = JUEGOS.filter(j => j.modalidad === 'Equipos');
+  const [cargando, setCargando] = useState(true);
+  const [procesando, setProcesando] = useState(false);
+  const [error, setError] = useState('');
+  const [mensajeExito, setMensajeExito] = useState('');
 
-  const handleCrearEquipo = (e) => {
+  const cargarDatos = async () => {
+    setCargando(true);
+    try {
+      const [listaEquipos, listaJuegos, listaJugadores] = await Promise.all([
+        api.obtenerEquipos(),
+        api.obtenerJuegos(),
+        api.obtenerJugadores(),
+      ]);
+      setEquipos(listaEquipos);
+      setJuegos(listaJuegos.filter((j) => j.modalidad?.toLowerCase() === 'equipos'));
+      setJugadores(listaJugadores);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarDatos();
+  }, []);
+
+  useEffect(() => {
+    if (usuario && !capitanId) {
+      setCapitanId(String(usuario.id));
+    }
+  }, [usuario]);
+
+  const manejarCrearEquipo = async (e) => {
     e.preventDefault();
-    setErrorNombre(''); setErrorJuego(''); setErrorCapitan('');
+    setError('');
+    setMensajeExito('');
+    setProcesando(true);
 
-    if (nombre.trim().length < 3) {
-      setErrorNombre("El nombre debe tener al menos 3 caracteres.");
-      return;
+    try {
+      await api.crearEquipo({
+        nombre: nombreEquipo,
+        juegoId: Number(juegoId),
+        capitanId: Number(esAdmin && capitanId ? capitanId : usuario.id),
+      });
+      setNombreEquipo('');
+      setJuegoId('');
+      setMensajeExito('¡Equipo creado exitosamente!');
+      await cargarDatos();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setProcesando(false);
     }
-
-    if (EQUIPOS.some(eq => eq.nombre.toLowerCase() === nombre.trim().toLowerCase())) {
-      setErrorNombre("Ya existe un equipo con ese nombre.");
-      return;
-    }
-
-    const juego = JUEGOS.find(j => j.id === juegoId);
-    if (!juego || juego.modalidad !== "Equipos") {
-      setErrorJuego("Debes seleccionar un juego con modalidad por equipos.");
-      return;
-    }
-
-    if (!capitanId) {
-      setErrorCapitan("Debes seleccionar un capitán.");
-      return;
-    }
-
-    const capitan = JUGADORES.find(j => j.id === capitanId);
-    if (capitan && capitan.sanciones.some(s => s.vigente)) {
-      setErrorCapitan("El capitán tiene una sanción vigente y no puede crear el equipo.");
-      return;
-    }
-
-    const nuevoEquipo = {
-      id: "e" + (EQUIPOS.length + 1),
-      nombre: nombre.trim(),
-      juegoId,
-      capitanId,
-      activo: true,
-      integrantes: [{ jugadorId: capitanId, rol: "Capitán" }]
-    };
-
-    EQUIPOS.push(nuevoEquipo);
-    setEquipoEnEdicion(nuevoEquipo);
   };
 
-  const handleAgregarJugador = () => {
-    setErrorAgregar('');
-    if (!equipoEnEdicion) return;
-
-    if (!idJugadorAgregar) {
-      setErrorAgregar("Selecciona un jugador para agregar.");
-      return;
-    }
-
-    const jugador = JUGADORES.find(j => j.id === idJugadorAgregar);
-    if (jugador && jugador.sanciones.some(s => s.vigente)) {
-      setErrorAgregar("El jugador seleccionado posee una sanción vigente y no puede ser agregado.");
-      return;
-    }
-
-    const juego = JUEGOS.find(j => j.id === equipoEnEdicion.juegoId);
-    if (juego && equipoEnEdicion.integrantes.length >= juego.integrantesPorEquipo) {
-      setErrorAgregar(`La nómina máxima para ${juego.nombre} es de ${juego.integrantesPorEquipo} jugadores.`);
-      return;
-    }
-
-    setEquipoEnEdicion({
-      ...equipoEnEdicion,
-      integrantes: [...equipoEnEdicion.integrantes, { jugadorId: idJugadorAgregar, rol: "Titular" }]
-    });
-    setIdJugadorAgregar('');
+  const actualizarSeleccion = (equipoId, campo, valor) => {
+    setSeleccionIntegrante((prev) => ({
+      ...prev,
+      [equipoId]: {
+        usuarioId: prev[equipoId]?.usuarioId || '',
+        rolEquipo: prev[equipoId]?.rolEquipo || 'Titular',
+        [campo]: valor,
+      },
+    }));
   };
 
-  const handleQuitarJugador = (id) => {
-    if (id === equipoEnEdicion.capitanId) return;
-    setEquipoEnEdicion({
-      ...equipoEnEdicion,
-      integrantes: equipoEnEdicion.integrantes.filter(i => i.jugadorId !== id)
-    });
+  const manejarAgregarIntegrante = async (equipoId) => {
+    const sel = seleccionIntegrante[equipoId];
+    if (!sel?.usuarioId) {
+      setError('Selecciona un jugador antes de agregarlo a la plantilla.');
+      return;
+    }
+
+    setError('');
+    setMensajeExito('');
+    setProcesando(true);
+
+    try {
+      await api.agregarIntegrante(equipoId, {
+        usuarioId: Number(sel.usuarioId),
+        rolEquipo: sel.rolEquipo || 'Titular',
+      });
+      actualizarSeleccion(equipoId, 'usuarioId', '');
+      setMensajeExito('Integrante agregado a la plantilla.');
+      await cargarDatos();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setProcesando(false);
+    }
   };
 
-  const jugadoresDisponibles = JUGADORES.filter(
-    j => !equipoEnEdicion?.integrantes.some(i => i.jugadorId === j.id)
-  );
+  const manejarQuitarIntegrante = async (equipoId, usuarioId) => {
+    setError('');
+    setMensajeExito('');
+    setProcesando(true);
+
+    try {
+      await api.quitarIntegrante(equipoId, usuarioId);
+      setMensajeExito('Integrante eliminado de la plantilla.');
+      await cargarDatos();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setProcesando(false);
+    }
+  };
 
   return (
     <main id="contenido-principal">
       <section className="franja">
         <div className="contenedor">
-          <h1>Gestión de Mi Equipo</h1>
-          <div className="dos-columnas">
-            <div>
-              <h2>Crear un Nuevo Equipo</h2>
-              <form className="formulario" onSubmit={handleCrearEquipo} noValidate>
-                <div className="campo">
-                  <label htmlFor="nombre-equipo">Nombre del equipo</label>
-                  <input type="text" id="nombre-equipo" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Halcones de Neón" />
-                  {errorNombre && <span className="mensaje-error">{errorNombre}</span>}
-                </div>
+          <h1>Gestión de Equipos</h1>
+          <p>Crea tu escuadra competitiva, asigna titulares o suplentes y revisa los rosters activos.</p>
 
-                <div className="campo">
-                  <label htmlFor="juego-principal">Juego principal</label>
-                  <select id="juego-principal" value={juegoId} onChange={(e) => setJuegoId(e.target.value)} disabled={!!equipoEnEdicion}>
-                    <option value="">Selecciona un juego</option>
-                    {juegosEquipos.map(j => <option key={j.id} value={j.id}>{j.nombre}</option>)}
-                  </select>
-                  {errorJuego && <span className="mensaje-error">{errorJuego}</span>}
-                </div>
+          {error && (
+            <p role="alert" style={{ color: '#FF5C7A', fontWeight: 600, margin: '1rem 0' }}>
+              ⚠ {error}
+            </p>
+          )}
 
-                <div className="campo">
-                  <label htmlFor="capitan">Capitán</label>
-                  <select id="capitan" value={capitanId} onChange={(e) => setCapitanId(e.target.value)} disabled={!!equipoEnEdicion}>
-                    <option value="">Selecciona un capitán</option>
-                    {JUGADORES.map(j => <option key={j.id} value={j.id}>{j.apodo} ({j.nombre})</option>)}
-                  </select>
-                  {errorCapitan && <span className="mensaje-error">{errorCapitan}</span>}
-                </div>
+          {mensajeExito && (
+            <p role="status" style={{ color: '#00F5D4', fontWeight: 600, margin: '1rem 0' }}>
+              ✔ {mensajeExito}
+            </p>
+          )}
 
-                <button type="submit" className="boton boton-primario" disabled={!!equipoEnEdicion}>Crear Equipo</button>
-              </form>
-            </div>
-
-            {equipoEnEdicion && (
+          {estaAutenticado ? (
+            <form
+              onSubmit={manejarCrearEquipo}
+              className="tarjeta-torneo"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '1rem',
+                margin: '1.5rem 0 2.5rem',
+                alignItems: 'end',
+              }}
+            >
               <div>
-                <h2>Plantilla de Integrantes ({equipoEnEdicion.nombre})</h2>
-                <ul className="lista-integrantes">
-                  {equipoEnEdicion.integrantes.map(item => {
-                    const jugador = JUGADORES.find(j => j.id === item.jugadorId);
-                    const esCapitan = item.jugadorId === equipoEnEdicion.capitanId;
-                    return (
-                      <li key={item.jugadorId} className="integrante">
-                        <span><strong>{jugador?.apodo}</strong> — {jugador?.nombre} {esCapitan ? ' (Capitán)' : ' (Titular)'}</span>
-                        {!esCapitan && (
-                          <button type="button" onClick={() => handleQuitarJugador(item.jugadorId)} className="boton boton-secundario" style={{ padding: '0.2rem 0.6rem', fontSize: '0.85rem' }}>
-                            Quitar
-                          </button>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-
-                <div className="formulario" style={{ marginTop: '1.5rem' }}>
-                  <div className="campo">
-                    <label htmlFor="agregar-jugador">Agregar Jugador</label>
-                    <select id="agregar-jugador" value={idJugadorAgregar} onChange={(e) => setIdJugadorAgregar(e.target.value)}>
-                      <option value="">Selecciona un jugador</option>
-                      {jugadoresDisponibles.map(j => <option key={j.id} value={j.id}>{j.apodo}</option>)}
-                    </select>
-                    {errorAgregar && <span className="mensaje-error">{errorAgregar}</span>}
-                  </div>
-                  <button type="button" onClick={handleAgregarJugador} className="boton boton-secundario">Agregar Jugador</button>
-                </div>
+                <label htmlFor="nombre-equipo">Nombre del nuevo equipo</label>
+                <input
+                  id="nombre-equipo"
+                  type="text"
+                  required
+                  minLength={3}
+                  maxLength={80}
+                  value={nombreEquipo}
+                  onChange={(e) => setNombreEquipo(e.target.value)}
+                  placeholder="Ej: Titans CL"
+                  style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+                />
               </div>
-            )}
-          </div>
+
+              <div>
+                <label htmlFor="juego-equipo">Videojuego principal</label>
+                <select
+                  id="juego-equipo"
+                  required
+                  value={juegoId}
+                  onChange={(e) => setJuegoId(e.target.value)}
+                  style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+                >
+                  <option value="">-- Selecciona juego --</option>
+                  {juegos.map((j) => (
+                    <option key={j.id} value={j.id}>
+                      {j.nombre} (Máx. {j.integrantesPorEquipo} jug.)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {esAdmin && (
+                <div>
+                  <label htmlFor="capitan-equipo">Capitán asignado</label>
+                  <select
+                    id="capitan-equipo"
+                    required
+                    value={capitanId}
+                    onChange={(e) => setCapitanId(e.target.value)}
+                    style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+                  >
+                    {jugadores.map((j) => (
+                      <option key={j.id} value={j.id}>
+                        {j.apodo} ({j.nombre})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div>
+                <button type="submit" className="boton" disabled={procesando} style={{ width: '100%' }}>
+                  {procesando ? 'Guardando...' : 'Crear Equipo'}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="tarjeta-torneo" style={{ margin: '1.5rem 0 2rem', textAlign: 'center' }}>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Inicia sesión para crear un equipo o administrar tu plantilla.
+              </p>
+              <Link to="/login" className="boton">
+                Iniciar Sesión
+              </Link>
+            </div>
+          )}
+
+          <h2>Equipos Registrados</h2>
+          {cargando ? (
+            <p>Cargando equipos...</p>
+          ) : equipos.length === 0 ? (
+            <p className="estado-vacio">Aún no hay equipos registrados.</p>
+          ) : (
+            <div className="grilla-tarjetas" style={{ marginTop: '1rem' }}>
+              {equipos.map((eq) => {
+                const puedeEditar =
+                  estaAutenticado && (esAdmin || eq.capitan?.id === usuario?.id);
+                const maxIntegrantes = eq.juego?.integrantesPorEquipo || 5;
+                const idsEnEquipo = new Set(eq.integrantes?.map((i) => i.usuario?.id) || []);
+                const disponibles = jugadores.filter((j) => !idsEnEquipo.has(j.id));
+
+                return (
+                  <article className="tarjeta-torneo" key={eq.id}>
+                    <span className={`pastilla ${eq.activo ? 'pastilla--abierto' : 'pastilla--finalizado'}`}>
+                      {eq.activo ? 'Activo' : 'Inactivo'}
+                    </span>
+                    <h3 style={{ marginTop: '0.6rem' }}>{eq.nombre}</h3>
+                    <p className="juego">
+                      {eq.juego?.nombre} · Capitán: <strong>{eq.capitan?.apodo}</strong>
+                    </p>
+
+                    <div className="fila-meta">
+                      <span>Plantilla</span>
+                      <span>
+                        {eq.integrantes?.length || 0} / {maxIntegrantes} jugadores
+                      </span>
+                    </div>
+
+                    <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0', display: 'grid', gap: '0.45rem' }}>
+                      {eq.integrantes?.map((item) => {
+                        const esCapitan = item.usuario?.id === eq.capitan?.id;
+                        return (
+                          <li
+                            key={item.id || item.usuario?.id}
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              padding: '0.4rem 0.6rem',
+                              background: 'rgba(255,255,255,0.04)',
+                              borderRadius: '6px',
+                              fontSize: '0.9rem',
+                            }}
+                          >
+                            <span>
+                              <strong>{item.usuario?.apodo}</strong> · {item.rolEquipo}
+                            </span>
+                            {puedeEditar && !esCapitan && (
+                              <button
+                                type="button"
+                                onClick={() => manejarQuitarIntegrante(eq.id, item.usuario?.id)}
+                                disabled={procesando}
+                                style={{
+                                  background: 'transparent',
+                                  border: '1px solid #FF5C7A',
+                                  color: '#FF5C7A',
+                                  borderRadius: '4px',
+                                  padding: '0.15rem 0.5rem',
+                                  cursor: 'pointer',
+                                  fontSize: '0.8rem',
+                                }}
+                              >
+                                Quitar
+                              </button>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+
+                    {puedeEditar && (eq.integrantes?.length || 0) < maxIntegrantes && (
+                      <div style={{ display: 'grid', gap: '0.5rem', marginTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.75rem' }}>
+                        <select
+                          aria-label="Seleccionar jugador"
+                          value={seleccionIntegrante[eq.id]?.usuarioId || ''}
+                          onChange={(e) => actualizarSeleccion(eq.id, 'usuarioId', e.target.value)}
+                          style={{ width: '100%', padding: '0.5rem' }}
+                        >
+                          <option value="">+ Agregar jugador...</option>
+                          {disponibles.map((j) => (
+                            <option key={j.id} value={j.id}>
+                              {j.apodo} ({j.nombre})
+                            </option>
+                          ))}
+                        </select>
+
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <select
+                            aria-label="Rol en equipo"
+                            value={seleccionIntegrante[eq.id]?.rolEquipo || 'Titular'}
+                            onChange={(e) => actualizarSeleccion(eq.id, 'rolEquipo', e.target.value)}
+                            style={{ flex: 1, padding: '0.5rem' }}
+                          >
+                            <option value="Titular">Titular</option>
+                            <option value="Suplente">Suplente</option>
+                          </select>
+
+                          <button
+                            type="button"
+                            className="boton boton-secundario"
+                            disabled={procesando}
+                            onClick={() => manejarAgregarIntegrante(eq.id)}
+                          >
+                            Agregar
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
     </main>

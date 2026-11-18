@@ -1,67 +1,112 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TORNEOS, JUEGOS, Datos } from '../data/datos';
+import { api } from '../services/api';
+
+function nombreEstado(estado) {
+  const mapa = {
+    abierto: 'Abierto',
+    en_curso: 'En curso',
+    finalizado: 'Finalizado',
+  };
+  return mapa[estado] || estado;
+}
 
 export default function Torneos() {
+  const [torneos, setTorneos] = useState([]);
+  const [juegos, setJuegos] = useState([]);
   const [busqueda, setBusqueda] = useState('');
   const [juegoId, setJuegoId] = useState('');
   const [estado, setEstado] = useState('');
   const [desde, setDesde] = useState('');
   const [hasta, setHasta] = useState('');
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
 
-  const handleLimpiar = () => {
+  useEffect(() => {
+    api.obtenerJuegos()
+      .then((data) => setJuegos(data))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (desde && hasta && desde > hasta) {
+      setError('La fecha "Desde" no puede ser posterior a la fecha "Hasta".');
+      setTorneos([]);
+      return;
+    }
+
+    setError('');
+    setCargando(true);
+
+    api.obtenerTorneos({ busqueda, juegoId, estado, desde, hasta })
+      .then((data) => setTorneos(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setCargando(false));
+  }, [busqueda, juegoId, estado, desde, hasta]);
+
+  const limpiarFiltros = () => {
     setBusqueda('');
     setJuegoId('');
     setEstado('');
     setDesde('');
     setHasta('');
+    setError('');
   };
-
-  const validarYFiltrar = () => {
-    if (desde && hasta && desde > hasta) {
-      return { error: 'La fecha inicial no puede ser posterior a la fecha final.', resultados: [] };
-    }
-
-    const filtrados = TORNEOS.filter((t) => {
-      const coincideNombre = t.nombre.toLowerCase().includes(busqueda.trim().toLowerCase());
-      const coincideJuego = !juegoId || juegoId === 'todos' || t.juegoId === juegoId;
-      const coincideEstado = !estado || estado === 'todos' || t.estado === estado;
-      const coincideDesde = !desde || t.fechaInicio >= desde;
-      const coincideHasta = !hasta || t.fechaInicio <= hasta;
-      return coincideNombre && coincideJuego && coincideEstado && coincideDesde && coincideHasta;
-    });
-
-    return { error: '', resultados: filtrados };
-  };
-
-  const { error, resultados } = validarYFiltrar();
 
   return (
     <main id="contenido-principal">
       <section className="franja">
         <div className="contenedor">
-          <h1>Todos los torneos</h1>
-          <p>Filtra por juego, estado o rango de fechas, o busca directamente por nombre.</p>
+          <h1>Explorar Torneos</h1>
+          <p>Filtra competencias por videojuego, estado de inscripción o fechas de inicio.</p>
 
-          <form id="form-filtros" className="panel-filtros" noValidate onSubmit={(e) => e.preventDefault()}>
-            <div className="campo">
+          <div
+            className="tarjeta-torneo"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '1rem',
+              margin: '1.5rem 0 2rem',
+              alignItems: 'end',
+            }}
+          >
+            <div>
               <label htmlFor="filtro-busqueda">Buscar por nombre</label>
-              <input type="search" id="filtro-busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} placeholder="Ej: Copa, Liga..." />
+              <input
+                id="filtro-busqueda"
+                type="text"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Ej: Copa Arena..."
+                style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+              />
             </div>
 
-            <div className="campo">
-              <label htmlFor="filtro-juego">Juego</label>
-              <select id="filtro-juego" value={juegoId} onChange={(e) => setJuegoId(e.target.value)}>
-                <option value="">Todos</option>
-                {JUEGOS.map((j) => (
-                  <option key={j.id} value={j.id}>{j.nombre}</option>
+            <div>
+              <label htmlFor="filtro-juego">Videojuego</label>
+              <select
+                id="filtro-juego"
+                value={juegoId}
+                onChange={(e) => setJuegoId(e.target.value)}
+                style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+              >
+                <option value="">Todos los juegos</option>
+                {juegos.map((j) => (
+                  <option key={j.id} value={j.id}>
+                    {j.nombre}
+                  </option>
                 ))}
               </select>
             </div>
 
-            <div className="campo">
+            <div>
               <label htmlFor="filtro-estado">Estado</label>
-              <select id="filtro-estado" value={estado} onChange={(e) => setEstado(e.target.value)}>
+              <select
+                id="filtro-estado"
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+                style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+              >
                 <option value="">Todos</option>
                 <option value="abierto">Abierto</option>
                 <option value="en_curso">En curso</option>
@@ -69,51 +114,87 @@ export default function Torneos() {
               </select>
             </div>
 
-            <div className="campo">
+            <div>
               <label htmlFor="filtro-desde">Inicio desde</label>
-              <input type="date" id="filtro-desde" value={desde} onChange={(e) => setDesde(e.target.value)} />
+              <input
+                id="filtro-desde"
+                type="date"
+                value={desde}
+                onChange={(e) => setDesde(e.target.value)}
+                style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+              />
             </div>
 
-            <div className="campo">
+            <div>
               <label htmlFor="filtro-hasta">Inicio hasta</label>
-              <input type="date" id="filtro-hasta" value={hasta} onChange={(e) => setHasta(e.target.value)} />
+              <input
+                id="filtro-hasta"
+                type="date"
+                value={hasta}
+                onChange={(e) => setHasta(e.target.value)}
+                style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+              />
             </div>
 
-            <div className="campo" style={{ justifyContent: 'flex-end' }}>
-              <button type="button" onClick={handleLimpiar} className="boton boton-secundario">Limpiar filtros</button>
+            <div>
+              <button
+                type="button"
+                onClick={limpiarFiltros}
+                className="boton boton-secundario"
+                style={{ width: '100%' }}
+              >
+                Limpiar filtros
+              </button>
             </div>
-          </form>
-
-          {error && <p className="mensaje-error" role="alert">{error}</p>}
-
-          <div id="lista-torneos" className="grilla-tarjetas">
-            {resultados.length ? (
-              resultados.map((torneo) => {
-                const juego = Datos.obtenerJuegoPorId(torneo.juegoId);
-                const porcentaje = Math.min(100, Math.round((torneo.cupoOcupado / torneo.cupoMaximo) * 100));
-                return (
-                  <article className="tarjeta-torneo" key={torneo.id}>
-                    <span className={`pastilla pastilla--${torneo.estado}`}>{Datos.nombreEstado(torneo.estado)}</span>
-                    <h3>{torneo.nombre}</h3>
-                    <p className="juego">{juego ? juego.nombre : "—"} · {torneo.modalidad}</p>
-                    <div>
-                      <div className="barra-cupo" role="img" aria-label={`${torneo.cupoOcupado} de ${torneo.cupoMaximo} cupos ocupados`}>
-                        <span style={{ width: `${porcentaje}%` }}></span>
-                      </div>
-                      <p className="etiqueta-dato">{torneo.cupoOcupado} / {torneo.cupoMaximo} cupos</p>
-                    </div>
-                    <div className="fila-meta">
-                      <span>Cierra inscripción</span>
-                      <span>{torneo.fechaCierreInscripcion}</span>
-                    </div>
-                    <Link className="boton boton-secundario" to={`/inscripcion?id=${torneo.id}`}>Ver detalle</Link>
-                  </article>
-                );
-              })
-            ) : (
-              <p className="estado-vacio">Ningún torneo cumple con los filtros seleccionados.</p>
-            )}
           </div>
+
+          {error && (
+            <p role="alert" style={{ color: '#FF5C7A', fontWeight: 600, marginBottom: '1.5rem' }}>
+              ⚠ {error}
+            </p>
+          )}
+
+          {cargando ? (
+            <p>Buscando torneos...</p>
+          ) : torneos.length === 0 ? (
+            <div className="estado-vacio">
+              <p>No se encontraron torneos con los filtros seleccionados.</p>
+            </div>
+          ) : (
+            <div className="grilla-tarjetas">
+              {torneos.map((t) => (
+                <article className="tarjeta-torneo" key={t.id}>
+                  <span className={`pastilla pastilla--${t.estado}`}>
+                    {nombreEstado(t.estado)}
+                  </span>
+                  <h3>{t.nombre}</h3>
+                  <p className="juego">
+                    {t.juego ? t.juego.nombre : 'Juego no disponible'} · {t.modalidad}
+                  </p>
+                  {t.descripcion && (
+                    <p style={{ fontSize: '0.9rem', opacity: 0.85, margin: '0.5rem 0' }}>
+                      {t.descripcion}
+                    </p>
+                  )}
+                  <div className="fila-meta">
+                    <span>Cupos ocupados</span>
+                    <span>{t.cupoOcupado} / {t.cupoMaximo}</span>
+                  </div>
+                  <div className="fila-meta">
+                    <span>Inicio</span>
+                    <span>{t.fechaInicio}</span>
+                  </div>
+                  <div className="fila-meta">
+                    <span>Cierre inscripción</span>
+                    <span>{t.fechaCierreInscripcion}</span>
+                  </div>
+                  <Link className="boton" to={`/inscripcion?id=${t.id}`}>
+                    {t.estado === 'abierto' ? 'Ver detalle e inscribir' : 'Ver detalle'}
+                  </Link>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </main>

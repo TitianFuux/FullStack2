@@ -1,158 +1,263 @@
-import React, { useState } from 'react';
-import { JUGADORES, Datos } from '../data/datos';
+import React, { useEffect, useState } from 'react';
+import { api } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function Perfil() {
-  const [jugadorId, setJugadorId] = useState(JUGADORES[0]?.id || '');
+  const { usuario, estaAutenticado, esAdmin, actualizarUsuarioLocal } = useAuth();
+
+  const [jugadores, setJugadores] = useState([]);
+  const [equipos, setEquipos] = useState([]);
+  const [seleccionadoId, setSeleccionadoId] = useState('');
+
   const [apodo, setApodo] = useState('');
   const [correo, setCorreo] = useState('');
-  const [edad, setEdad] = useState('');
-  const [clave, setClave] = useState('');
-  const [claveConfirmar, setClaveConfirmar] = useState('');
-  const [errores, setErrores] = useState({});
+  const [edad, setEdad] = useState(20);
+  const [password, setPassword] = useState('');
+
+  const [cargando, setCargando] = useState(true);
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState('');
   const [mensajeExito, setMensajeExito] = useState('');
 
-  const jugador = Datos.obtenerJugadorPorId(jugadorId);
+  const cargarDatos = async () => {
+    setCargando(true);
+    try {
+      const [listaJugadores, listaEquipos] = await Promise.all([
+        api.obtenerJugadores(),
+        api.obtenerEquipos(),
+      ]);
+      setJugadores(listaJugadores);
+      setEquipos(listaEquipos);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const nuevosErrores = {};
-
-    if (apodo) {
-      if (/\s/.test(apodo)) nuevosErrores.apodo = "El apodo no puede contener espacios.";
-      else if (apodo.length < 3 || apodo.length > 15) nuevosErrores.apodo = "El apodo debe tener entre 3 y 15 caracteres.";
+      if (!seleccionadoId && listaJugadores.length > 0) {
+        const inicial = usuario
+          ? listaJugadores.find((j) => j.id === usuario.id) || listaJugadores[0]
+          : listaJugadores[0];
+        setSeleccionadoId(String(inicial.id));
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setCargando(false);
     }
+  };
 
-    const patronCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (correo && !patronCorreo.test(correo)) {
-      nuevosErrores.correo = "Ingresa un correo con formato válido, ej: nombre@dominio.cl";
-    }
+  useEffect(() => {
+    cargarDatos();
+  }, []);
 
-    if (edad && (Number(edad) < 13 || Number(edad) > 99)) {
-      nuevosErrores.edad = "La edad debe estar entre 13 y 99 años.";
-    }
+  const perfilActual = jugadores.find((j) => String(j.id) === String(seleccionadoId));
 
-    if (clave || claveConfirmar) {
-      if (clave.length < 8) nuevosErrores.clave = "La contraseña debe tener al menos 8 caracteres.";
-      if (clave !== claveConfirmar) nuevosErrores.claveConfirmar = "Las contraseñas no coinciden.";
-    }
-
-    setErrores(nuevosErrores);
-
-    if (Object.keys(nuevosErrores).length === 0) {
-      setMensajeExito("Datos de perfil actualizados correctamente.");
-      setApodo('');
-      setCorreo('');
-      setEdad('');
-      setClave('');
-      setClaveConfirmar('');
-    } else {
+  useEffect(() => {
+    if (perfilActual) {
+      setApodo(perfilActual.apodo || '');
+      setCorreo(perfilActual.correo || '');
+      setEdad(perfilActual.edad || 20);
+      setPassword('');
+      setError('');
       setMensajeExito('');
+    }
+  }, [seleccionadoId, jugadores]);
+
+  const puedeEditar =
+    estaAutenticado && perfilActual && (esAdmin || usuario?.id === perfilActual.id);
+
+  const equiposDelJugador = perfilActual
+    ? equipos.filter(
+        (eq) =>
+          eq.capitan?.id === perfilActual.id ||
+          eq.integrantes?.some((i) => i.usuario?.id === perfilActual.id)
+      )
+    : [];
+
+  const manejarGuardar = async (e) => {
+    e.preventDefault();
+    if (!perfilActual) return;
+
+    setError('');
+    setMensajeExito('');
+    setGuardando(true);
+
+    try {
+      const payload = {
+        apodo,
+        correo,
+        edad: Number(edad),
+        ...(password.trim() ? { password } : {}),
+      };
+
+      const actualizado = await api.actualizarJugador(perfilActual.id, payload);
+      if (usuario && usuario.id === actualizado.id) {
+        actualizarUsuarioLocal(actualizado);
+      }
+      setPassword('');
+      setMensajeExito('Datos del perfil actualizados correctamente.');
+      await cargarDatos();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setGuardando(false);
     }
   };
 
   return (
     <main id="contenido-principal">
       <section className="franja">
-        <div className="contenedor">
-          <h1>Perfil de jugador</h1>
+        <div className="contenedor" style={{ maxWidth: '820px' }}>
+          <h1>Perfil Competitivo</h1>
+          <p>Consulta estadísticas, equipos e historial disciplinario de los jugadores.</p>
 
-          <div className="campo" style={{ maxWidth: '320px', marginBottom: '1.5rem' }}>
-            <label htmlFor="selector-jugador">Ver ficha de</label>
-            <select id="selector-jugador" value={jugadorId} onChange={(e) => setJugadorId(e.target.value)}>
-              {JUGADORES.map((j) => (
-                <option key={j.id} value={j.id}>{j.nombre} ({j.apodo})</option>
-              ))}
-            </select>
-          </div>
+          {cargando ? (
+            <p style={{ marginTop: '1.5rem' }}>Cargando fichas de jugadores...</p>
+          ) : jugadores.length === 0 ? (
+            <p className="estado-vacio">No hay jugadores registrados.</p>
+          ) : (
+            <>
+              <div style={{ margin: '1.5rem 0' }}>
+                <label htmlFor="selector-perfil">Seleccionar jugador</label>
+                <select
+                  id="selector-perfil"
+                  value={seleccionadoId}
+                  onChange={(e) => setSeleccionadoId(e.target.value)}
+                  style={{ width: '100%', padding: '0.65rem', marginTop: '0.4rem' }}
+                >
+                  {jugadores.map((j) => (
+                    <option key={j.id} value={j.id}>
+                      {j.apodo} — {j.nombre} ({j.rol})
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          {jugador && (
-            <div className="dos-columnas">
-              <div>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(jugador.nombre)}&background=241B3D&color=F1ECFF&bold=true&size=96`}
-                    alt={`Perfil de ${jugador.nombre}`} width="72" height="72" style={{ borderRadius: '50%', border: '2px solid var(--color-borde)' }}
-                  />
-                  <div>
-                    <h2 style={{ marginBottom: '0.2rem' }}>{jugador.nombre}</h2>
-                    <p className="etiqueta-dato">@{jugador.apodo} · {jugador.correo}</p>
-                  </div>
-                </div>
+              {perfilActual && (
+                <div style={{ display: 'grid', gap: '1.5rem' }}>
+                  <article className="tarjeta-torneo">
+                    <span className="pastilla pastilla--abierto">{perfilActual.rol}</span>
+                    <h2 style={{ marginTop: '0.6rem' }}>{perfilActual.apodo}</h2>
+                    <p className="juego">
+                      {perfilActual.nombre} · {perfilActual.correo} · {perfilActual.edad} años
+                    </p>
 
-                <div className="grilla-stats" style={{ maxWidth: '320px', marginTop: '0.8rem' }}>
-                  <div className="tarjeta-stat"><div className="valor">{jugador.estadisticas.victorias}</div><div className="rotulo">Victorias</div></div>
-                  <div className="tarjeta-stat"><div className="valor">{jugador.estadisticas.derrotas}</div><div className="rotulo">Derrotas</div></div>
-                </div>
+                    <div className="fila-meta">
+                      <span>Partidas ganadas</span>
+                      <strong style={{ color: '#00F5D4' }}>{perfilActual.victorias ?? 0}</strong>
+                    </div>
+                    <div className="fila-meta">
+                      <span>Partidas perdidas</span>
+                      <span>{perfilActual.derrotas ?? 0}</span>
+                    </div>
+                    <div className="fila-meta">
+                      <span>Equipos actuales</span>
+                      <span>
+                        {equiposDelJugador.length
+                          ? equiposDelJugador.map((e) => e.nombre).join(', ')
+                          : 'Sin equipo asignado'}
+                      </span>
+                    </div>
+                  </article>
 
-                <h2 style={{ marginTop: '2rem' }}>Historial de torneos</h2>
-                <div className="tabla-envoltorio">
-                  <table>
-                    <thead><tr><th>Torneo</th><th>Resultado</th></tr></thead>
-                    <tbody>
-                      {jugador.historial.length ? (
-                        jugador.historial.map((h, i) => <tr key={i}><td>{h.torneo}</td><td>{h.resultado}</td></tr>)
-                      ) : (
-                        <tr><td colSpan="2">Sin torneos jugados todavía.</td></tr>
+                  <article className="tarjeta-torneo">
+                    <h3>Historial de Sanciones</h3>
+                    {!perfilActual.sanciones || perfilActual.sanciones.length === 0 ? (
+                      <p style={{ color: '#00F5D4', marginTop: '0.5rem' }}>
+                        ✔ Jugador sin sanciones disciplinarias.
+                      </p>
+                    ) : (
+                      <ul style={{ listStyle: 'none', padding: 0, marginTop: '0.75rem', display: 'grid', gap: '0.5rem' }}>
+                        {perfilActual.sanciones.map((s) => (
+                          <li
+                            key={s.id}
+                            style={{
+                              padding: '0.65rem',
+                              borderRadius: '6px',
+                              background: s.vigente ? 'rgba(255, 92, 122, 0.15)' : 'rgba(255,255,255,0.05)',
+                              borderLeft: `4px solid ${s.vigente ? '#FF5C7A' : '#00F5D4'}`,
+                            }}
+                          >
+                            <strong>{s.vigente ? '⚠ SANCIÓN VIGENTE:' : 'Cumplida:'}</strong> {s.motivo} ({s.duracion})
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </article>
+
+                  {puedeEditar && (
+                    <form onSubmit={manejarGuardar} className="tarjeta-torneo" style={{ display: 'grid', gap: '1rem' }}>
+                      <h3>Editar Datos de Perfil</h3>
+
+                      <div>
+                        <label htmlFor="edit-apodo">Apodo (3 a 15 caracteres sin espacios)</label>
+                        <input
+                          id="edit-apodo"
+                          type="text"
+                          required
+                          minLength={3}
+                          maxLength={15}
+                          value={apodo}
+                          onChange={(e) => setApodo(e.target.value)}
+                          style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="edit-correo">Correo electrónico</label>
+                        <input
+                          id="edit-correo"
+                          type="email"
+                          required
+                          value={correo}
+                          onChange={(e) => setCorreo(e.target.value)}
+                          style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="edit-edad">Edad</label>
+                        <input
+                          id="edit-edad"
+                          type="number"
+                          required
+                          min={13}
+                          max={99}
+                          value={edad}
+                          onChange={(e) => setEdad(e.target.value)}
+                          style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="edit-pass">Nueva contraseña (dejar vacío para mantener actual)</label>
+                        <input
+                          id="edit-pass"
+                          type="password"
+                          minLength={8}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Mínimo 8 caracteres"
+                          style={{ width: '100%', padding: '0.6rem', marginTop: '0.35rem' }}
+                        />
+                      </div>
+
+                      {error && (
+                        <p role="alert" style={{ color: '#FF5C7A', fontWeight: 600, margin: 0 }}>
+                          ⚠ {error}
+                        </p>
                       )}
-                    </tbody>
-                  </table>
-                </div>
 
-                <h2 style={{ marginTop: '2rem' }}>Sanciones</h2>
-                <ul className="lista-integrantes">
-                  {jugador.sanciones.length ? (
-                    jugador.sanciones.map((s, i) => (
-                      <li className="integrante" key={i}>
-                        <span>{s.motivo}</span>
-                        <span className="pastilla" style={{ color: s.vigente ? "var(--color-error)" : "var(--color-texto-tenue)" }}>
-                          {s.vigente ? "Vigente" : "Cumplida"}
-                        </span>
-                      </li>
-                    ))
-                  ) : (
-                    <li className="integrante"><span>Sin sanciones registradas.</span></li>
+                      {mensajeExito && (
+                        <p role="status" style={{ color: '#00F5D4', fontWeight: 600, margin: 0 }}>
+                          ✔ {mensajeExito}
+                        </p>
+                      )}
+
+                      <button type="submit" className="boton" disabled={guardando}>
+                        {guardando ? 'Guardando cambios...' : 'Guardar Cambios'}
+                      </button>
+                    </form>
                   )}
-                </ul>
-              </div>
-
-              <div>
-                <h2>Editar datos de contacto</h2>
-                <form className="formulario" onSubmit={handleSubmit} noValidate>
-                  <div className={`campo ${errores.apodo ? 'con-error' : ''}`}>
-                    <label htmlFor="campo-apodo">Apodo</label>
-                    <input type="text" id="campo-apodo" value={apodo} onChange={(e) => setApodo(e.target.value)} placeholder={jugador.apodo} />
-                    {errores.apodo && <span className="mensaje-error">{errores.apodo}</span>}
-                  </div>
-
-                  <div className={`campo ${errores.correo ? 'con-error' : ''}`}>
-                    <label htmlFor="campo-correo">Correo electrónico</label>
-                    <input type="email" id="campo-correo" value={correo} onChange={(e) => setCorreo(e.target.value)} placeholder={jugador.correo} />
-                    {errores.correo && <span className="mensaje-error">{errores.correo}</span>}
-                  </div>
-
-                  <div className={`campo ${errores.edad ? 'con-error' : ''}`}>
-                    <label htmlFor="campo-edad">Edad</label>
-                    <input type="number" id="campo-edad" value={edad} onChange={(e) => setEdad(e.target.value)} placeholder="18 a 99 años" />
-                    {errores.edad && <span className="mensaje-error">{errores.edad}</span>}
-                  </div>
-
-                  <div className={`campo ${errores.clave ? 'con-error' : ''}`}>
-                    <label htmlFor="campo-clave">Nueva contraseña</label>
-                    <input type="password" id="campo-clave" value={clave} onChange={(e) => setClave(e.target.value)} />
-                    {errores.clave && <span className="mensaje-error">{errores.clave}</span>}
-                  </div>
-
-                  <div className={`campo ${errores.claveConfirmar ? 'con-error' : ''}`}>
-                    <label htmlFor="campo-clave-confirmar">Confirmar contraseña</label>
-                    <input type="password" id="campo-clave-confirmar" value={claveConfirmar} onChange={(e) => setClaveConfirmar(e.target.value)} />
-                    {errores.claveConfirmar && <span className="mensaje-error">{errores.claveConfirmar}</span>}
-                  </div>
-
-                  {mensajeExito && <div className="aviso aviso--exito">{mensajeExito}</div>}
-                  <button type="submit" className="boton boton-primario">Guardar cambios</button>
-                </form>
-              </div>
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
