@@ -1,0 +1,13 @@
+Portadas de los juegos
+======================
+Copia aquí una imagen por juego (16:9, por ejemplo 1600x900, en JPG) y ponle como nombre el nombre
+del juego en minúsculas, sin tildes y con guiones:
+
+  League of Legends      ->  league-of-legends.jpg
+  Rocket League          ->  rocket-league.jpg
+  Mario Kart 8 Deluxe    ->  mario-kart-8-deluxe.jpg
+  Valorant               ->  valorant.jpg
+
+Un juego nuevo que el administrador agregue desde el panel funciona igual: basta con dejar su imagen aquí.
+Si el archivo no existe, la interfaz muestra una portada generada con un color propio de cada juego.
+Usa arte propio o con licencia: el caso no autoriza logos ni nombres de marcas en la interfaz.

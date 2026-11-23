@@ -1,0 +1,108 @@
+/* =========================================================
+   Arena//Manager — Tema (Paleta 1: Arena púrpura)
+   Las mismas variables del EP1 alimentan a Bootstrap 5.3 (sección "Puente").
+   Identidad: HUD de arena → marcos de esquina, cuadrícula de fondo,
+   cortes diagonales y cuenta regresiva.
+   El acento (turquesa) se reserva para estados y la acción de foco.
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+
+:root {
+  --color-fondo: #0E0B16;
+  --color-superficie: #1C1430;
+  --color-tarjeta: #241B3D;
+  --color-borde: #362A54;
+  --color-primario: #9146FF;
+  --color-primario-claro: #B98CFF;   /* texto/íconos morados sobre fondo oscuro (contraste ≥ 4.5:1) */
+  --color-acento: #00F5D4;
+  --color-texto: #F1ECFF;
+  --color-texto-tenue: #B6A9DE;
+  --color-error: #FF5C7A;
+  --radio-borde: 4px;
+  --fuente-titulo: 'Oswald', 'Arial Narrow', sans-serif;
+  --fuente-datos: 'IBM Plex Mono', monospace;
+}
+
+/* ---------- Puente con Bootstrap (sobrescribe sus variables) ---------- */
+:root, [data-bs-theme="dark"] {
+  --bs-body-bg: var(--color-fondo);
+  --bs-body-color: var(--color-texto);
+  --bs-body-font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  --bs-secondary-color: var(--color-texto-tenue);
+  --bs-border-color: var(--color-borde);
+  --bs-primary: var(--color-primario);
+  --bs-primary-rgb: 145, 70, 255;
+  --bs-link-color: var(--color-acento);
+  --bs-link-hover-color: #7CFFEA;
+  --bs-link-color-rgb: 0, 245, 212;
+  --bs-border-radius: var(--radio-borde);
+  --bs-danger: var(--color-error);
+  --bs-emphasis-color: var(--color-texto);
+}
+
+.btn { --bs-btn-font-size: 1rem; --bs-btn-font-weight: 600; letter-spacing: .01em; }
+.btn-primary {
+  --bs-btn-color: #fff; --bs-btn-bg: var(--color-primario); --bs-btn-border-color: var(--color-primario);
+  --bs-btn-hover-color: #fff; --bs-btn-hover-bg: #A266FF; --bs-btn-hover-border-color: #A266FF;
+  --bs-btn-active-color: #fff; --bs-btn-active-bg: #7C33E6; --bs-btn-active-border-color: #7C33E6;
+  --bs-btn-disabled-bg: #4B3A78; --bs-btn-disabled-border-color: #4B3A78; --bs-btn-disabled-color: #D8CCF5;
+  --bs-btn-focus-shadow-rgb: 0, 245, 212;
+  box-shadow: 0 0 0 rgba(145, 70, 255, 0);
+  transition: box-shadow .2s ease, transform .08s ease, background-color .15s;
+}
+.btn-primary:not(:disabled):hover { box-shadow: 0 8px 26px rgba(145, 70, 255, .45); transform: translateY(-1px); }
+.btn-outline-light { --bs-btn-color: var(--color-texto); --bs-btn-border-color: var(--color-borde);
+  --bs-btn-hover-bg: var(--color-tarjeta); --bs-btn-hover-border-color: var(--color-acento); --bs-btn-hover-color: var(--color-acento);
+  --bs-btn-active-bg: var(--color-tarjeta); --bs-btn-active-color: var(--color-acento); }
+.btn:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, button:focus-visible {
+  outline: 3px solid var(--color-acento); outline-offset: 2px; box-shadow: none;
+}
+
+.form-control, .form-select {
+  background-color: var(--color-tarjeta); border-color: var(--color-borde); color: var(--color-texto);
+}
+.form-control:focus, .form-select:focus {
+  background-color: var(--color-tarjeta); color: var(--color-texto);
+  border-color: var(--color-acento); box-shadow: 0 0 0 .2rem rgba(0, 245, 212, .22);
+}
+.form-control::placeholder { color: #8F82B8; }
+.form-label { font-size: .88rem; font-weight: 500; margin-bottom: .3rem; }
+
+.table { --bs-table-bg: transparent; --bs-table-color: var(--color-texto); --bs-table-border-color: var(--color-borde); }
+.table > thead th { font-family: var(--fuente-datos); font-weight: 500; color: var(--color-texto-tenue); font-size: .8rem; }
+
+/* ---------- Base ---------- */
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(1100px 560px at 90% -8%, rgba(145, 70, 255, .24), transparent 60%),
+    radial-gradient(800px 480px at -8% 38%, rgba(0, 245, 212, .05), transparent 60%),
+    var(--color-fondo);
+  background-attachment: fixed;
+  line-height: 1.55;
+}
+/* Cuadrícula de arena que se desvanece hacia abajo */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(145, 70, 255, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(145, 70, 255, .07) 1px, transparent 1px);
+  background-size: 52px 52px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+          mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+#root { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+#root > main { flex: 1; }
+
+h1, h2, h3, .h6 { font-family: var(--fuente-titulo); font-weight: 600; letter-spacing: .02em; }
+.seccion { padding-top: 2.5rem; padding-bottom: 1.5rem; }
+.lead-texto { color: var(--color-texto-tenue); max-width: 68ch; font-size: 1.05rem; }
+.etiqueta-dato { font-family: var(--fuente-datos); font-size: .78rem; color: var(--color-texto-tenue); }
+.salto-contenido { position: absolute; left: -999px; top: 8px; background: var(--color-acento); color: #0E0B16; padding: .5rem 1rem; z-index: 100; }
+.salto-contenido:focus { left: 8px; }
+
+/* Títulos con barra inclinada */
+.titulo-pagina { font-size: clamp(2rem, 4.4vw, 3.2rem); text-transform: uppercase; line-height: 1.05; margin-bottom: 1rem; }
+.titulo-pagina::after { content: ""; display: block; width: 84px; height: 5px; margin-top: .7rem; background: var(--color-primario); transform: skewX(-24deg); }
+.titulo-seccion { font-size: 1.45rem; text-transform: uppercase; margin-bottom: 1.1rem; display: flex; align-items: center; gap: .65rem; }
+.titulo-seccion::before { content: ""; width: 10px; height: 1.15em; background: var(--color-primario); transform: skewX(-22deg); flex: none; }

@@ -1,0 +1,170 @@
+/* Estilos de los componentes y las páginas (se cargan una vez desde main.jsx, junto con tema.css). */
+
+/* ---------- Cabecera ---------- */
+.cabecera { background: rgba(28, 20, 48, .92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--color-borde); }
+.cabecera::after { content: ""; display: block; height: 2px; background: linear-gradient(90deg, var(--color-primario), transparent 60%); }
+.marca { font-family: var(--fuente-titulo); font-weight: 700; letter-spacing: .1em; font-size: 1.3rem; color: var(--color-texto); text-decoration: none; }
+.marca-sep { color: var(--color-primario); margin: 0 .08em; }
+.navbar .nav-link { color: var(--color-texto-tenue); font-weight: 500; border-bottom: 2px solid transparent; padding-inline: .9rem; }
+.navbar .nav-link:hover, .navbar .nav-link.active { color: var(--color-texto); border-bottom-color: var(--color-primario); }
+.selector-perfil { display: flex; align-items: center; gap: .5rem; font-size: .8rem; color: var(--color-texto-tenue); }
+.selector-perfil select { min-width: 140px; }
+
+/* ---------- Carrusel de portada ---------- */
+.carrusel { position: relative; height: clamp(380px, 62vh, 560px); overflow: hidden; border-bottom: 1px solid var(--color-borde); background: var(--color-superficie); }
+.carrusel-slide { position: absolute; inset: 0; animation: entrar .8s ease both; }
+.carrusel-imagen { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: zoom 9s ease-out both; }
+.carrusel-slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14,11,22,.96) 0%, rgba(14,11,22,.72) 42%, rgba(14,11,22,.1) 100%), linear-gradient(0deg, rgba(14,11,22,.9), transparent 40%); }
+.carrusel-panel { position: relative; z-index: 2; height: 100%; display: flex; align-items: center; }
+.carrusel-texto { max-width: 560px; padding-left: 1.25rem; border-left: 5px solid var(--color-juego, var(--color-primario)); }
+.carrusel-texto h2 { font-size: clamp(2rem, 5.4vw, 3.8rem); text-transform: uppercase; line-height: 1.02; margin: .8rem 0; }
+.carrusel-texto p { color: var(--color-texto-tenue); font-size: 1.1rem; margin-bottom: 1.4rem; }
+.carrusel-controles { position: absolute; bottom: 1.25rem; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.carrusel-indicadores { display: flex; gap: .5rem; flex-wrap: wrap; }
+.indicador { width: 44px; height: 8px; padding: 0; border: 0; background: rgba(241, 236, 255, .28); transform: skewX(-24deg); position: relative; overflow: hidden; cursor: pointer; }
+.indicador[aria-current="true"]::after { content: ""; position: absolute; inset: 0; background: var(--color-primario-claro); transform-origin: left; animation: progreso var(--intervalo, 5s) linear both; }
+.pausado .indicador[aria-current="true"]::after { animation-play-state: paused; }
+.control { width: 44px; height: 44px; border: 1px solid var(--color-borde); background: rgba(28, 20, 48, .85); color: var(--color-texto); font-size: 1.1rem; cursor: pointer; border-radius: var(--radio-borde); }
+.control:hover { border-color: var(--color-acento); color: var(--color-acento); }
+@keyframes progreso { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes zoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+@keyframes entrar { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Imágenes por juego ---------- */
+.imagen-juego { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Tarjeta de torneo con marcos de esquina */
+.tarjeta-torneo { position: relative; display: flex; flex-direction: column; background: var(--color-superficie); border: 1px solid var(--color-borde); border-radius: var(--radio-borde); overflow: visible; transition: transform .2s ease, box-shadow .2s ease; }
+.tarjeta-torneo::before, .tarjeta-torneo::after { content: ""; position: absolute; width: 18px; height: 18px; transition: all .2s ease; pointer-events: none; z-index: 2; }
+.tarjeta-torneo::before { top: -2px; left: -2px; border-top: 3px solid var(--color-primario); border-left: 3px solid var(--color-primario); }
+.tarjeta-torneo::after { bottom: -2px; right: -2px; border-bottom: 3px solid var(--color-primario); border-right: 3px solid var(--color-primario); }
+.tarjeta-torneo:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(145, 70, 255, .25); }
+.tarjeta-torneo:hover::before, .tarjeta-torneo:hover::after { width: 34px; height: 34px; }
+.tarjeta-portada { position: relative; height: 150px; overflow: hidden; border-bottom: 3px solid var(--color-juego, var(--color-primario)); }
+.tarjeta-portada .imagen-juego { transition: transform .5s ease; }
+.tarjeta-torneo:hover .imagen-juego { transform: scale(1.06); }
+.tarjeta-portada .pastilla { position: absolute; top: .7rem; left: .7rem; background: rgba(14, 11, 22, .88); }
+.tarjeta-cuerpo { padding: 1.1rem 1.25rem 1.25rem; display: flex; flex-direction: column; gap: .75rem; flex: 1; }
+.tarjeta-cuerpo h3 { font-size: 1.3rem; margin: 0; }
+.juego-etiqueta { font-family: var(--fuente-datos); font-size: .78rem; color: var(--color-juego, var(--color-primario-claro)); margin: 0; text-transform: uppercase; }
+.fila-meta { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px dashed var(--color-borde); padding-top: .6rem; font-size: .85rem; color: var(--color-texto-tenue); }
+.barra-cupo { height: 6px; background: var(--color-tarjeta); border-radius: 3px; overflow: hidden; margin-bottom: .35rem; }
+.barra-cupo span { display: block; height: 100%; background: linear-gradient(90deg, var(--color-primario), var(--color-primario-claro)); }
+
+/* Tiles de juegos en Inicio */
+.tile-juego { position: relative; display: block; height: 130px; overflow: hidden; border: 1px solid var(--color-borde); border-radius: var(--radio-borde); border-bottom: 3px solid var(--color-juego); text-decoration: none; }
+.tile-juego .imagen-juego { transition: transform .4s ease; }
+.tile-juego:hover .imagen-juego { transform: scale(1.08); }
+.tile-juego::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(14,11,22,.92), transparent 70%); }
+.tile-juego-texto { position: absolute; left: .9rem; bottom: .7rem; z-index: 2; display: flex; flex-direction: column; color: var(--color-texto); line-height: 1.2; }
+.tile-juego-texto small { color: var(--color-texto-tenue); }
+
+/* ---------- Pastillas de estado (icono + texto, nunca solo color) ---------- */
+.pastilla { display: inline-flex; align-items: center; gap: .3rem; width: fit-content; font-family: var(--fuente-datos); font-size: .74rem; padding: .18rem .6rem; border-radius: 999px; border: 1px solid currentColor; color: var(--color-texto-tenue); }
+.pastilla--abierto, .pastilla--validada { color: var(--color-acento); }
+.pastilla--en_curso, .pastilla--en_juego { color: var(--color-primario-claro); }
+.pastilla--programada { color: var(--color-texto); }
+.pastilla--error { color: var(--color-error); }
+
+/* ---------- Próximos cierres ---------- */
+.lista-cierres { display: flex; flex-direction: column; gap: .75rem; padding: 0; }
+.cierre { display: flex; align-items: center; gap: 1.1rem; background: var(--color-superficie); border: 1px solid var(--color-borde); border-left: 4px solid var(--color-primario); border-radius: var(--radio-borde); padding: .8rem 1.1rem; flex-wrap: wrap; }
+.cierre-dias { min-width: 64px; text-align: center; font-family: var(--fuente-titulo); line-height: 1; }
+.cierre-dias strong { display: block; font-size: 2.2rem; color: var(--color-primario-claro); }
+.cierre-dias small { font-family: var(--fuente-datos); font-size: .7rem; color: var(--color-texto-tenue); text-transform: uppercase; }
+
+/* ---------- Detalle de torneo ---------- */
+.detalle-heroe { position: relative; min-height: 280px; display: flex; align-items: flex-end; overflow: hidden; border-bottom: 4px solid var(--color-juego, var(--color-primario)); }
+.detalle-heroe-imagen { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.detalle-heroe::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(14,11,22,.96) 8%, rgba(14,11,22,.35) 75%); }
+.detalle-heroe-texto { position: relative; z-index: 2; padding-top: 3rem; padding-bottom: 1.6rem; }
+.detalle-heroe-texto h1 { font-size: clamp(2rem, 5vw, 3.4rem); text-transform: uppercase; margin: .6rem 0 .2rem; }
+.detalle-heroe-texto p { color: var(--color-texto-tenue); margin: 0; }
+
+.grilla-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.tarjeta-stat { background: var(--color-tarjeta); border: 1px solid var(--color-borde); border-radius: var(--radio-borde); padding: 1rem; text-align: center; position: relative; }
+.tarjeta-stat::before { content: ""; position: absolute; top: -1px; left: -1px; width: 12px; height: 12px; border-top: 2px solid var(--color-primario); border-left: 2px solid var(--color-primario); }
+.tarjeta-stat .valor { font-family: var(--fuente-titulo); font-size: 1.7rem; color: var(--color-primario-claro); line-height: 1.15; }
+.tarjeta-stat .rotulo { font-size: .78rem; color: var(--color-texto-tenue); }
+
+.selector-rondas { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.btn-ronda { background: transparent; border: 1px solid var(--color-borde); color: var(--color-texto-tenue); border-radius: 999px; padding: .4rem 1.1rem; font-size: .9rem; cursor: pointer; }
+.btn-ronda:hover { color: var(--color-texto); border-color: var(--color-primario-claro); }
+.btn-ronda[aria-pressed="true"] { background: var(--color-primario); border-color: var(--color-primario); color: #fff; font-weight: 600; }
+
+.lista-partidas { display: flex; flex-direction: column; gap: .6rem; padding: 0; }
+.partida { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .6rem 1rem; background: var(--color-tarjeta); border: 1px solid var(--color-borde); border-left: 4px solid var(--color-primario); border-radius: var(--radio-borde); padding: .75rem 1rem; }
+.enfrentamiento { display: flex; align-items: center; gap: .7rem; font-weight: 600; flex-wrap: wrap; }
+.vs { font-family: var(--fuente-titulo); color: var(--color-primario-claro); font-size: .85rem; }
+.por-definir { color: var(--color-texto-tenue); font-style: italic; font-weight: 500; }
+.partida-meta { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+.resultado { font-family: var(--fuente-titulo); font-size: 1.15rem; color: var(--color-acento); }
+
+.tabla-envoltorio { border: 1px solid var(--color-borde); border-radius: var(--radio-borde); background: var(--color-superficie); }
+.posicion { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; border: 1px solid var(--color-borde); font-family: var(--fuente-titulo); transform: skewX(-12deg); }
+.podio-1 .posicion { background: var(--color-primario); border-color: var(--color-primario); color: #fff; }
+.podio-2 .posicion, .podio-3 .posicion { border-color: var(--color-primario-claro); color: var(--color-primario-claro); }
+.podio td { font-weight: 600; }
+
+/* ---------- Paneles, formularios, listas ---------- */
+.panel, .formulario, .panel-filtros { background: var(--color-superficie); border: 1px solid var(--color-borde); border-radius: var(--radio-borde); padding: 1.5rem; }
+.formulario { display: flex; flex-direction: column; gap: 1.1rem; position: relative; }
+.formulario::before { content: ""; position: absolute; top: -2px; left: -2px; width: 18px; height: 18px; border-top: 3px solid var(--color-primario); border-left: 3px solid var(--color-primario); }
+.panel-filtros { margin-bottom: 2rem; padding: 1.25rem; }
+.campo { display: flex; flex-direction: column; gap: .3rem; }
+.campo .ayuda { font-size: .78rem; color: var(--color-texto-tenue); }
+.campo.con-error .form-control, .campo.con-error .form-select { border-color: var(--color-error); }
+.mensaje-error { color: var(--color-error); font-size: .85rem; min-height: 1.1em; display: block; }
+
+.aviso { display: flex; flex-direction: column; gap: .3rem; border: 1px solid; border-radius: var(--radio-borde); padding: .8rem 1rem; font-size: .92rem; }
+.aviso--exito { color: var(--color-acento); border-color: var(--color-acento); background: rgba(0, 245, 212, .08); }
+.aviso--info { color: var(--color-primario-claro); border-color: var(--color-primario); background: rgba(145, 70, 255, .1); }
+
+.lista-integrantes { display: flex; flex-direction: column; gap: .5rem; padding: 0; }
+.integrante { display: flex; justify-content: space-between; align-items: center; gap: 1rem; background: var(--color-tarjeta); border: 1px solid var(--color-borde); border-radius: var(--radio-borde); padding: .6rem .85rem; }
+
+.ficha { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .8rem 1.2rem; margin: 1rem 0 1.5rem; }
+.ficha dt { font-family: var(--fuente-datos); font-size: .72rem; color: var(--color-texto-tenue); text-transform: uppercase; font-weight: 500; }
+.ficha dd { margin: 0; font-weight: 600; }
+.banner-inscripcion { height: 220px; border-radius: var(--radio-borde); border: 1px solid var(--color-borde); }
+.vista-previa-juego { border: 1px solid var(--color-borde); border-radius: var(--radio-borde); overflow: hidden; }
+.vista-previa-juego .imagen-juego { height: 130px; }
+.vista-previa-juego figcaption { padding: .5rem .8rem; font-size: .82rem; color: var(--color-texto-tenue); background: var(--color-tarjeta); }
+
+.ficha-jugador { display: flex; align-items: center; gap: 1.2rem; }
+.avatar { width: 96px; height: 96px; flex: none; border-radius: 50%; border: 3px solid var(--color-primario); background: var(--color-tarjeta); color: var(--color-texto); display: flex; align-items: center; justify-content: center; font-family: var(--fuente-titulo); font-size: 2rem; letter-spacing: .04em; }
+
+.marco-video { border: 1px solid var(--color-borde); border-radius: var(--radio-borde); overflow: hidden; background: #000; }
+.cargando { display: flex; align-items: center; gap: .7rem; color: var(--color-texto-tenue); padding: 2rem 0; }
+.estado-vacio { border: 1px dashed var(--color-borde); border-radius: var(--radio-borde); padding: 2.2rem; text-align: center; color: var(--color-texto-tenue); max-width: none; }
+
+/* ---------- Pie ---------- */
+.pie { margin-top: 3rem; background: var(--color-superficie); border-top: 1px solid var(--color-borde); }
+.pie::before { content: ""; display: block; height: 4px; background: repeating-linear-gradient(-45deg, var(--color-primario) 0 14px, transparent 14px 28px); opacity: .55; }
+.pie .container { padding-top: 1.75rem; padding-bottom: 1.75rem; font-size: .88rem; color: var(--color-texto-tenue); }
+
+/* ---------- Responsivo (verificar en 360 / 768 / 1280 px) ---------- */
+@media (max-width: 767.98px) {
+  .carrusel { height: 440px; }
+  .carrusel-controles { flex-direction: column-reverse; align-items: flex-start; }
+  .selector-perfil { padding: .75rem 0; }
+  .ficha-jugador { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- Estados de carga, avisos y sesión ---------- */
+.aviso--error { color: var(--color-error); border-color: var(--color-error); background: rgba(255, 92, 122, .1); }
+.aviso--alerta { color: var(--color-texto); border-color: var(--color-primario-claro); background: rgba(145, 70, 255, .16); }
+.aviso-lento { color: var(--color-primario-claro); }
+.sesion-usuario { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; color: var(--color-texto-tenue); font-size: .9rem; }
+
+/* ---------- Gestión ---------- */
+.selector-estado { min-width: 130px; width: auto; }
+.tarjeta-portada--baja { height: 96px; }
+.agregar-integrante { display: flex; flex-direction: column; gap: .5rem; border-top: 1px dashed var(--color-borde); padding-top: .75rem; }
+.pastilla--activo, .pastilla--cumplida { color: var(--color-acento); }
+.pastilla--inactivo { color: var(--color-texto-tenue); }
+.pastilla--vigente { color: var(--color-error); }
